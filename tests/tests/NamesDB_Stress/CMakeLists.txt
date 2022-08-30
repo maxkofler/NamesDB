@@ -8,7 +8,7 @@ add_executable(${TEST_NAME} ${sources})
 target_link_libraries(${TEST_NAME} PUBLIC
     gtest
     test_main
-    fileindex
+    namesdb  
 )
 
 target_compile_features(${TEST_NAME} PRIVATE cxx_std_17)

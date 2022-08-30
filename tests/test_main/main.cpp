@@ -2,7 +2,6 @@
 
 #include "random.h"
 #include "log.h"
-Log::Log* hlog;
 
 int glob_argc;
 char** glob_argv;

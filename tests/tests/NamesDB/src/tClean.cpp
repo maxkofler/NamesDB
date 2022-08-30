@@ -40,8 +40,8 @@ TEST(NamesDB, clean_correct){
 	NamesDB db;
 
 	//Just mashed my keyboard at this point
-	db._size_entries = 452987;
-	db._used_bytes = 234978;
+	db._count_entries = 452987;
+	db._bytesUsed = 234978;
 	db._count_entries = 13084;
 
 	//Nothing happens with this pointer, it gets set to nullptr.
@@ -53,8 +53,8 @@ TEST(NamesDB, clean_correct){
 		FAIL() << "NamesDB::clean() touched something it should not";
 	}
 	
-	EXPECT_EQ(0, db._size_entries);
-	EXPECT_EQ(0, db._used_bytes);
+	EXPECT_EQ(0, db._count_entries);
+	EXPECT_EQ(0, db._bytesUsed);
 	EXPECT_EQ(0, db._count_entries);
 	EXPECT_EQ(nullptr, db._entries);
 	EXPECT_EQ(nullptr, db._last_entry);
