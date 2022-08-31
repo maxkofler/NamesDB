@@ -45,7 +45,7 @@ TEST(NamesDB, searchFirst_find_name){
 TEST(NamesDB, searchFirst_find_scattered_name){
 	FUN();
 
-	std::string name = "SomeRandomName";
+	std::string name = "SCmyOisgnNdfsnhklnTnoeENladT";
 
 	void* wrongpointer = (void*) &name;
 
@@ -53,7 +53,7 @@ TEST(NamesDB, searchFirst_find_scattered_name){
 
 	size_t id = db.add(name, &db);
 
-	ASSERT_EQ(0, db.searchFirst("Content", false).code) << "Could not find the entry";
+	ASSERT_NE(0, db.searchFirst("CONTENT", false).code) << "Found a scattered name, this should not be";
 }
 
 //Tests if searchFirst() finds a similar string, what it should not do
@@ -74,7 +74,7 @@ TEST(NamesDB, searchFirst_similar){
 		namesDB_searchRes res = db.searchFirst("Content", true);
 
 		ASSERT_EQ(0, res.code) << "Could not find the required string";
-		EXPECT_NE(&db, res.data) << "Found the wrong item that was similar";
+		EXPECT_NE(wrongpointer, res.data) << "Found the wrong item that was similar";
 	}
 
 	{	//Check if the search for "myContent" works correctly
