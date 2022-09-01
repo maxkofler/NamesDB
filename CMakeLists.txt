@@ -16,7 +16,7 @@ endif()
 file(GLOB_RECURSE CXX_SOURCES "src/**.cpp")
 file(GLOB_RECURSE HEADERS "include/**.h")
 
-add_library(${OUTPUT} SHARED ${HEADERS} ${CXX_SOURCES})
+add_library(${OUTPUT} STATIC ${HEADERS} ${CXX_SOURCES})
 add_dependencies(${OUTPUT} log)
 target_compile_features(${OUTPUT} PRIVATE cxx_std_17)
 target_link_libraries(${OUTPUT} log)
