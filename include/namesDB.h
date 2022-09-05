@@ -45,7 +45,7 @@ public:
 
 	struct Iterator{
 		using iterator_category = std::forward_iterator_tag;
-		using value_type		= entry_namesDB;
+		using value_type		= entry_namesDB*;
 		using pointer			= entry_namesDB*;
 		using reference			= entry_namesDB&;
 
@@ -54,11 +54,13 @@ public:
 		reference operator*() const { return *_ptr;}
 		pointer operator->() { return _ptr; }
 
+		pointer get() { return _ptr; }
+
 		//Prefix increment
-		Iterator& operator++() { _ptr++; return *this; }  
+		Iterator& operator++() { _ptr = getNextEntry(_ptr); return *this; }  
 
 		//Postfix increment
-		Iterator operator++(int) { Iterator tmp = getNextEntry(_ptr); return tmp; }
+		Iterator operator++(int) { return Iterator(getNextEntry(_ptr)); }
 
 		friend bool operator== (const Iterator& a, const Iterator& b) { return a._ptr == b._ptr; };
 		friend bool operator!= (const Iterator& a, const Iterator& b) { return a._ptr != b._ptr; };
@@ -68,7 +70,7 @@ public:
 	};
 
 	Iterator begin() { return Iterator((entry_namesDB*)_entries);}
-	Iterator end() { return Iterator(_last_entry);}
+	Iterator end() { return Iterator(getNextEntry(_last_entry));}
 
 	/**
 	 * @brief	Expands the internal database by the supplied amount of blocks
@@ -89,7 +91,13 @@ public:
 	 * @param	entry			The entry to register
 	 * @return	size_t			The id of the name
 	 */
-	size_t						add(std::string str, void* entry);
+	size_t						add(const std::string& str, void* entry);
+
+	/**
+	 * @brief	Appends the contents of the supplied database to this
+	 * @param	db				The db to append the contents of
+	 */
+	void						append(NamesDB& db);
 
 	/**
 	 * @brief	Gets the entry with the specified id of this database (is really slow, read note)

@@ -2,11 +2,17 @@ cmake_minimum_required(VERSION 3.5)
 
 project(NamesDB)
 
+option(NAMESDB_TESTS "Build NamesDB tests" OFF)
+option(NAMESDB_OWNLOG "Use an own Log module (requires the Log submodule)" OFF)
+
 set(OUTPUT "namesdb")
 
 include_directories(include)
 
-option(NAMESDB_OWNLOG "Use an own Log module (requires the Log submodule)" OFF)
+if (NAMESDB_TESTS)
+	set(LOG_MAXLEVEL 20 CACHE STRING "Set the maximum log level")
+endif()
+
 if (NAMESDB_OWNLOG)
 	message("[NamesDB INFO] Using own Log library!")
 	include_directories(Log/include)
@@ -21,7 +27,6 @@ add_dependencies(${OUTPUT} log)
 target_compile_features(${OUTPUT} PRIVATE cxx_std_17)
 target_link_libraries(${OUTPUT} log)
 
-option(NAMESDB_TESTS "Build NamesDB tests" OFF)
 if (NAMESDB_TESTS)
 	enable_testing()
 	message("[NamesDB INFO] Building NamesDB tests...")

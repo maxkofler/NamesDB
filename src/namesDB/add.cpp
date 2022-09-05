@@ -8,7 +8,7 @@
 #include <assert.h>
 static_assert(sizeof(void*) + sizeof(uint8_t) == sizeof(entry_namesDB), "Size of entry_namesDB changed, adjust this file!");
 
-size_t NamesDB::add(std::string str, void* entry_insert){
+size_t NamesDB::add(const std::string& str, void* entry_insert){
 	FUN();
 	DEBUG_EX("NamesDB::add()");
 
