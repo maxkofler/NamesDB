@@ -4,6 +4,7 @@
 #include <stdlib.h>			//size_t
 #include <string>
 #include <deque>
+#include <iterator>
 
 //If the entry of a namesDB entry is submitted as nullptr, replace it with this
 #define ENTRY_NULLPTR 0xFFFFFFFFFFFFFFFF
@@ -41,6 +42,33 @@ public:
 	 * @param	other			The database to copy
 	 */
 	NamesDB(const NamesDB& other);
+
+	struct Iterator{
+		using iterator_category = std::forward_iterator_tag;
+		using value_type		= entry_namesDB;
+		using pointer			= entry_namesDB*;
+		using reference			= entry_namesDB&;
+
+		Iterator(pointer ptr) : _ptr(ptr){}
+
+		reference operator*() const { return *_ptr;}
+		pointer operator->() { return _ptr; }
+
+		//Prefix increment
+		Iterator& operator++() { _ptr++; return *this; }  
+
+		//Postfix increment
+		Iterator operator++(int) { Iterator tmp = getNextEntry(_ptr); return tmp; }
+
+		friend bool operator== (const Iterator& a, const Iterator& b) { return a._ptr == b._ptr; };
+		friend bool operator!= (const Iterator& a, const Iterator& b) { return a._ptr != b._ptr; };
+
+	private:
+		pointer _ptr;
+	};
+
+	Iterator begin() { return Iterator((entry_namesDB*)_entries);}
+	Iterator end() { return Iterator(_last_entry);}
 
 	/**
 	 * @brief	Expands the internal database by the supplied amount of blocks
