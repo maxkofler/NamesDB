@@ -31,7 +31,7 @@ TEST(NamesDB, NamesDB_constructor_default_blocksize){
 TEST(NamesDB, NamesDB_constructor_specified_blocksize){
 	FUN();
 
-	NamesDB db(100234);
+	NamesDB db("Untitled", 100234);
 
 	ASSERT_EQ(100234, db._blockSize);
 }

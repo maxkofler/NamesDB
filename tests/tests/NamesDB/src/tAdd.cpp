@@ -47,7 +47,7 @@ TEST(NamesDB, add_expand){
 	try{
 		DEBUG_FAIL_FUN(funName);
 
-		NamesDB db(1);
+		NamesDB db("Untitled", 1);
 		db.add("Name", nullptr);
 
 		FAIL() << "NamesDB::add() does not call expand to extend its database";

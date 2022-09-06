@@ -5,7 +5,7 @@
 
 #include <cstring>
 
-NamesDB::NamesDB(size_t blockSize){
+NamesDB::NamesDB(const std::string& name, size_t blockSize) : _name(name){
 	FUN();
 	DEBUG_EX("NamesDB::NamesDB()");
 
@@ -26,6 +26,7 @@ NamesDB::NamesDB(const NamesDB& other){
 	FUN();
 	LOGMEM("[NamesDB] Creating new database from existing one...");
 
+	this->_name = other._name;
 	this->_blockSize = other._blockSize;
 	this->_blockCount = other._blockCount;
 	this->_bytesAllocated = other._bytesAllocated;
