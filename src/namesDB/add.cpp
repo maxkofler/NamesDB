@@ -12,7 +12,7 @@ size_t NamesDB::add(const std::string& str, void* entry_insert){
 	FUN();
 	DEBUG_EX("NamesDB::add()");
 
-	LOGMEM("[NamesDB][add] Adding new name to database \"" + _name + "\": \"" + str + "\"");
+	LOGMEM("[NamesDB][add] Adding new name to database \"" + _title + "\": \"" + str + "\"");
 
 	//Note the amount of bytes needed for this entry
 	uint8_t size_entry = sizeof(entry_namesDB) + str.length();

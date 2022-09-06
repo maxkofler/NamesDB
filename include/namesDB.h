@@ -32,10 +32,10 @@ public:
 	
 	/**
 	 * @brief	Creates a new names database
-	 * @param	name			The name of the database
+	 * @param	title			The title of the database
 	 * @param	blockSize		The size of the blocks that get allocated
 	 */
-	NamesDB(const std::string& name = "Untitled", size_t blockSize = 1024);
+	NamesDB(const std::string& title = "Untitled", size_t blockSize = 1024);
 	~NamesDB();
 
 	/**
@@ -161,9 +161,9 @@ private:
 #endif
 
 	/**
-	 * @brief	The name of the database (default="Untitled")
+	 * @brief	The title of the database (default="Untitled_xx")
 	 */
-	std::string					_name;
+	std::string					_title;
 
 	/**
 	 * @brief	The size of the  allocations

@@ -7,16 +7,16 @@
 
 static size_t untitled_num = 0;
 
-NamesDB::NamesDB(const std::string& name, size_t blockSize) : _name(name){
+NamesDB::NamesDB(const std::string& title, size_t blockSize) : _title(title){
 	FUN();
 	DEBUG_EX("NamesDB::NamesDB()");
 
-	if (_name == "Untitled"){
-		_name += "_" + std::to_string(untitled_num);
+	if (_title == "Untitled"){
+		_title += "_" + std::to_string(untitled_num);
 		untitled_num++;
 	}
 
-	LOGMEM("[NamesDB] Creating new names database \"" + _name + "\" with block size " + std::to_string(blockSize));
+	LOGMEM("[NamesDB] Creating new names database \"" + _title + "\" with block size " + std::to_string(blockSize));
 
 	this->_blockSize = blockSize;
 
@@ -31,9 +31,9 @@ NamesDB::~NamesDB(){
 
 NamesDB::NamesDB(const NamesDB& other){
 	FUN();
-	LOGMEM("[NamesDB] Creating new database \"" + _name + "\" from existing one...");
+	LOGMEM("[NamesDB] Creating new database \"" + other._title + "\" from existing one...");
 
-	this->_name = other._name + "_copy" + std::to_string(untitled_num);
+	this->_title = other._title + "_copy" + std::to_string(untitled_num);
 	untitled_num++;
 	this->_blockSize = other._blockSize;
 	this->_blockCount = other._blockCount;

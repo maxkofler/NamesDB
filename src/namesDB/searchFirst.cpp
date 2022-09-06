@@ -9,7 +9,7 @@ namesDB_searchRes NamesDB::searchFirst(std::string search, bool exact, size_t se
 	FUN();
 	DEBUG_EX("NamesDB::searchFirst()");
 
-	LOGMEM(	"[NamesDB][searchFirst] Searching \"" + _name + "\" for \"" + search + 
+	LOGMEM(	"[NamesDB][searchFirst] Searching \"" + _title + "\" for \"" + search + 
 			"\" from position " + std::to_string(search_start) + "...");
 
 	//Get the pointer to the first entry
@@ -98,7 +98,7 @@ namesDB_searchRes NamesDB::searchFirstFromEntry(std::string search, entry_namesD
 		curEntry = (entry_namesDB*)(((uint8_t*)curEntry) + sizeof(entry_namesDB) + curEntry->nameLen);
 	}
 
-	LOGMEM("[NamesDB][searchFirst] Could not find name \"" + search + "\" in database \"" + _name + "\"");
+	LOGMEM("[NamesDB][searchFirst] Could not find name \"" + search + "\" in database \"" + _title + "\"");
 
 	
 	return res;
