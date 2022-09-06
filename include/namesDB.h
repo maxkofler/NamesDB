@@ -66,6 +66,17 @@ public:
 	size_t						add(const std::string& str, void* entry);
 
 	/**
+	 * @brief	Changes the name of the database
+	 * @param	title			The new title of the database
+	 */
+	void						setTitle(const std::string& title);
+
+	/**
+	 * @brief	Returns the title of the database
+	 */
+	std::string					getTitle();
+
+	/**
 	 * @brief	Appends the contents of the supplied database to this
 	 * @param	db				The db to append the contents of
 	 */

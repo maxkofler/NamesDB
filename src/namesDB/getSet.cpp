@@ -4,6 +4,14 @@
 #include <assert.h>
 static_assert(sizeof(void*) + sizeof(uint8_t) == sizeof(entry_namesDB), "Size of entry_namesDB changed, adjust this file!");
 
+void NamesDB::setTitle(const std::string& title){
+	_title = title;
+}
+
+std::string NamesDB::getTitle(){
+	return _title;
+}
+
 size_t NamesDB::getEntriesCount(){
 	return _count_entries;
 }
