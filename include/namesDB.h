@@ -4,7 +4,8 @@
 #include <stdlib.h>			//size_t
 #include <string>
 #include <deque>
-#include <iterator>
+#include <ostream>
+#include <istream>
 
 struct entry_namesDB{
 	void*						data;
@@ -156,6 +157,19 @@ public:
 	 * @brief	Returns the bytes used by this database
 	 */
 	size_t						getBytesUsed();
+
+	/**
+	 * @brief	Exports this databases contents to the supplied stream
+	 * @param	outStream		The stream to export to
+	 */
+	void						exportDB(std::ostream& outStream);
+
+	/**
+	 * @brief	Imports the contents of this database form the supplied stream
+	 * @note	This clears the contents of this database
+	 * @param	inStream		The stream to import from
+	 */
+	bool						importDB(std::istream& inStream);
 
 	/**
 	 * @brief	Calculates the next database entry pointer from the provided pointer
