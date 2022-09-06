@@ -9,7 +9,7 @@ void NamesDB::append(NamesDB& db){
 	FUN();
 	DEBUG_EX("NamesDB::append()");
 
-	LOGF("[NamesDB][append] Appending data from another database...");
+	LOGF("[NamesDB][append] Appending data from \"" + db._name + "\" to \"" + _name + "\"...");
 
 	
 	entry_namesDB* entry = (entry_namesDB*) db._entries;

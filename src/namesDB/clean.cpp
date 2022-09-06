@@ -7,6 +7,8 @@ void NamesDB::clean(){
 	FUN();
 	DEBUG_EX("NamesDB::clean()");
 
+	LOGF("[NamesDB][clean] Cleaning contents of database \"" + _name + "\"...");
+
 	if (_entries != nullptr){
 		delete _entries;
 		_entries = nullptr;
