@@ -11,6 +11,9 @@ include_directories(include)
 
 if (NAMESDB_TESTS)
 	set(LOG_MAXLEVEL 20 CACHE STRING "Set the maximum log level")
+	message("[NamesDB INFO] Using own Log library for testing!")
+	include_directories(Log/include)
+	add_subdirectory(Log)
 endif()
 
 if (NAMESDB_OWNLOG)

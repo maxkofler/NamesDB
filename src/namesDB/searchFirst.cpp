@@ -18,7 +18,7 @@ namesDB_searchRes NamesDB::searchFirst(std::string search, bool exact, size_t se
 
 	if (curEntry == nullptr){
 		namesDB_searchRes res;
-		res.code = -2;
+		res.code = SEARCHRES_INVALIDARG;
 		return res;
 	}
 

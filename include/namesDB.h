@@ -6,9 +6,6 @@
 #include <deque>
 #include <iterator>
 
-//If the entry of a namesDB entry is submitted as nullptr, replace it with this
-#define ENTRY_NULLPTR 0xFFFFFFFFFFFFFFFF
-
 struct entry_namesDB{
 	void*						data;
 	uint8_t						nameLen;
