@@ -19,14 +19,8 @@ std::string NamesDB::getName(size_t id){
 		return std::string();
 	}
 
-	//Get the pointer to the first entry
-	entry_namesDB* curEntry = (entry_namesDB*)_entries;
-
-	//Iterate over every entry until we found the entry
-	for (size_t i = 1; i <= id; i++){
-		if (curEntry->data != nullptr)
-			curEntry = (entry_namesDB*)(((uint8_t*)curEntry) + sizeof(entry_namesDB) + curEntry->nameLen);;
-	}
+	//Get the pointer to the entry
+	entry_namesDB* curEntry = getDBEntry(id);
 
 	return getEntryName(curEntry);
 }

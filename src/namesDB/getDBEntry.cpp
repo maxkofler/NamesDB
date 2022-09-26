@@ -18,9 +18,8 @@ entry_namesDB* NamesDB::getDBEntry(size_t id){
 	entry_namesDB* curEntry = (entry_namesDB*)_entries;
 
 	//Iterate over every entry until we found the entry
-	for (size_t i = 1; i <= id; i++){
-		if (curEntry->data != nullptr)
-			curEntry = (entry_namesDB*)(((uint8_t*)curEntry) + sizeof(entry_namesDB) + curEntry->nameLen);
+	for (size_t i = 1; i <= id && i < _count_entries; i++){
+		curEntry = getNextEntry(curEntry);
 	}
 
 	return curEntry;
