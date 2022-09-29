@@ -172,6 +172,12 @@ public:
 	bool						importDB(std::istream& inStream);
 
 	/**
+	 * @brief	Updates the internal index for fast access
+	 * @note	This should be done before using id-based access after creating a new DB or updating it
+	 */
+	void						updateIndex();
+
+	/**
 	 * @brief	Calculates the next database entry pointer from the provided pointer
 	 * @param	cur				The entry to calculate from
 	 * @return	entry_namesDB*	The calculated next entry (not guaranteed to be valid)
@@ -223,6 +229,17 @@ private:
 	 * @brief	The last entry to fill in the next pointer
 	 */
 	entry_namesDB*				_last_entry = nullptr;
+
+	/**
+	 * @brief	Stores an array of quick indexes to the entries offsets in bytes from _entries
+	 */
+	size_t*						_index_entries_offset = nullptr;
+
+	/**
+	 * @brief	Stores the size of the index, this can be different from _count_entries if
+	 * 			the index does not get update immediately
+	 */
+	size_t						_size_index_entries = 0;
 
 };
 
