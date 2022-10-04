@@ -14,12 +14,20 @@ entry_namesDB* NamesDB::getDBEntry(size_t id){
 		return nullptr;
 	}
 
-	//Get the pointer to the first entry
-	entry_namesDB* curEntry = (entry_namesDB*)_entries;
+	entry_namesDB* curEntry = nullptr;
 
-	//Iterate over every entry until we found the entry
-	for (size_t i = 1; i <= id && i < _count_entries; i++){
-		curEntry = getNextEntry(curEntry);
+	//If the id is in the indexed entries, use the index to look it up
+	if (id < _size_index_entries){
+		curEntry = (entry_namesDB*)(((size_t)_entries) + _index_entries_offset[id]);
+	} else {
+		LOGDW("[NamesDB][getDBEntry] Index miss! You should consider updating the index by calling updateIndex()!");
+		//Get the pointer to the first entry
+		curEntry = (entry_namesDB*)_entries;
+
+		//Iterate over every entry until we found the entry
+		for (size_t i = 1; i <= id && i < _count_entries; i++){
+			curEntry = getNextEntry(curEntry);
+		}
 	}
 
 	return curEntry;
