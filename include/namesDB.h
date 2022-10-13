@@ -137,20 +137,20 @@ public:
 	 * @param	name			The name to search for
 	 * @param	exact			If the string has to match exactly or if it can be a substring
 	 * @param	start_id		The id to start searching from
-	 * @param	end_id			The id to stop searching at (inclusive), 0 means to the end
+	 * @param	end_id			The id to stop searching at (inclusive)
 	 * @return	namesDB_searchRes	The search result
 	 */
-	namesDB_searchRes			searchFirst(std::string name, bool exact, size_t start_id = 0, size_t end_id = 0);
+	namesDB_searchRes			searchFirst(std::string name, bool exact, size_t start_id = 0, size_t end_id = SIZE_T_MAX);
 
 	/**
 	 * @brief	Searches all occurences of the specified name
 	 * @param	name			The name to search for
 	 * @param	exact			If the string has to match exacltly or if it can be a substring
 	 * @param	start_id		The id to start searching from
-	 * @param	end_id			The id to stop searching at (inclusive), 0 means to the end
+	 * @param	end_id			The id to stop searching at (inclusive)
 	 * @return	A deque holding instances of namesDB_searchRes
 	 */
-	std::deque<namesDB_searchRes>	searchAll(std::string name, bool exact, size_t start_id = 0, size_t end_id = 0);
+	std::deque<namesDB_searchRes>	searchAll(std::string name, bool exact, size_t start_id = 0, size_t end_id = SIZE_T_MAX);
 
 	/**
 	 * @brief	Returns the amount of entries stored in this database

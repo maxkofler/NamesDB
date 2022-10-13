@@ -37,8 +37,7 @@ std::deque<namesDB_searchRes> NamesDB::searchAllFromEntry(std::string search, en
 
 		if (searchRes.code == SEARCHRES_NOTFOUND){
 			//The end of the search has been reached
-			continue_searching = false;
-			continue;
+			break;
 		} else if (searchRes.code != 0)
 			continue;
 
@@ -46,7 +45,7 @@ std::deque<namesDB_searchRes> NamesDB::searchAllFromEntry(std::string search, en
 		res.push_back(searchRes);
 
 		curStartEntry = NamesDB::getNextEntry(searchRes.dbEntry);
-		curStartID = searchRes.id+1;
+		//curStartID = searchRes.id+1;
 	}
 
 	/*while(continue_searching){

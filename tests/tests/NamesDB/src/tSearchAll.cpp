@@ -25,5 +25,11 @@ TEST(NamesDB, searchAll_debug){
 
 //Checks if searchAll does take the bounds seriously
 TEST(NamesDB, searchAll_bounds){
-	//searchAll should NOT use 0 as "search to end", this does not allow searching only the first entry
+	NamesDB db;
+	db.add("newEntry", &db);
+	db.add("newSecondEntry", &db);
+
+	auto res = db.searchAll("new", false, 0, 0);
+
+	ASSERT_EQ(1, res.size());
 }
