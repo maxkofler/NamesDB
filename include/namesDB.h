@@ -114,39 +114,43 @@ public:
 	 * @brief	Searches for the first occurrence of the specified name
 	 * @param	name			The name to search for
 	 * @param	startEntry		The entry to start searching from
-	 * @param	startID			The id of the starting entry
 	 * @param	exact			If the string has to match exactly or if it can be a substring
+	 * @param	startID			The id of the starting entry
+	 * @param	endID			The id of the last entry to search (inclusive), 0 is to the end
 	 * @return	namesDB_searchRes	The search result
 	 */
-	namesDB_searchRes			searchFirstFromEntry(std::string name, entry_namesDB* startEntry, size_t startID, bool exact);
+	namesDB_searchRes			searchFirstFromEntry(std::string name, entry_namesDB* startEntry, bool exact, size_t startID, size_t endID);
 
 	/**
 	 * @brief	Searches all occurences of the specified name
 	 * @param	name			The name to search for
 	 * @param	startEntry		The entry to start searching from
-	 * @param	startID			The id of the starting entry
 	 * @param	exact			If the string has to match exactly or if it can be a substring
+	 * @param	startID			The id of the starting entry
+	 * @param	endID			The id of the last entry to search (inclusive), 0 is to the end
 	 * @return	A deque holding instances of namesDB_searchRes
 	 */
-	std::deque<namesDB_searchRes>	searchAllFromEntry(std::string name, entry_namesDB* startEntry, size_t startID, bool exact);
+	std::deque<namesDB_searchRes>	searchAllFromEntry(std::string name, entry_namesDB* startEntry, bool exact, size_t startID, size_t endID);
 
 	/**
 	 * @brief	Searches for the first occurrence of the specified name
 	 * @param	name			The name to search for
 	 * @param	exact			If the string has to match exactly or if it can be a substring
 	 * @param	start_id		The id to start searching from
+	 * @param	end_id			The id to stop searching at (inclusive), 0 means to the end
 	 * @return	namesDB_searchRes	The search result
 	 */
-	namesDB_searchRes			searchFirst(std::string name, bool exact, size_t start_id = 0);
+	namesDB_searchRes			searchFirst(std::string name, bool exact, size_t start_id = 0, size_t end_id = 0);
 
 	/**
 	 * @brief	Searches all occurences of the specified name
 	 * @param	name			The name to search for
 	 * @param	exact			If the string has to match exacltly or if it can be a substring
 	 * @param	start_id		The id to start searching from
+	 * @param	end_id			The id to stop searching at (inclusive), 0 means to the end
 	 * @return	A deque holding instances of namesDB_searchRes
 	 */
-	std::deque<namesDB_searchRes>	searchAll(std::string name, bool exact, size_t start_id = 0);
+	std::deque<namesDB_searchRes>	searchAll(std::string name, bool exact, size_t start_id = 0, size_t end_id = 0);
 
 	/**
 	 * @brief	Returns the amount of entries stored in this database

@@ -5,7 +5,7 @@
 
 #include <cstring>
 
-namesDB_searchRes NamesDB::searchFirst(std::string search, bool exact, size_t search_start){
+namesDB_searchRes NamesDB::searchFirst(std::string search, bool exact, size_t search_start, size_t search_end){
 	FUN();
 	DEBUG_EX("NamesDB::searchFirst()");
 
@@ -22,11 +22,11 @@ namesDB_searchRes NamesDB::searchFirst(std::string search, bool exact, size_t se
 		return res;
 	}
 
-	return searchFirstFromEntry(search, curEntry, search_start, exact);
+	return searchFirstFromEntry(search, curEntry, exact, search_start, search_end);
 
 }
 
-namesDB_searchRes NamesDB::searchFirstFromEntry(std::string search, entry_namesDB* startEntry, size_t startID, bool exact){
+namesDB_searchRes NamesDB::searchFirstFromEntry(std::string search, entry_namesDB* startEntry, bool exact, size_t startID, size_t endID){
 	FUN();
 
 	if (startEntry == nullptr){

@@ -3,7 +3,9 @@
 
 #include "namesDB.h"
 
-std::deque<namesDB_searchRes> NamesDB::searchAll(std::string search, bool exact, size_t search_start){
+#include <thread>
+
+std::deque<namesDB_searchRes> NamesDB::searchAll(std::string search, bool exact, size_t search_start, size_t search_stop){
 	FUN();
 	DEBUG_EX("NamesDB::searchAll()");
 
@@ -11,13 +13,13 @@ std::deque<namesDB_searchRes> NamesDB::searchAll(std::string search, bool exact,
 
 	if (startEntry == nullptr){
 		std::deque<namesDB_searchRes> res;
-		return res;
+		return std::move(res);
 	}
 
-	return searchAllFromEntry(search, startEntry, search_start, exact);
+	return searchAllFromEntry(search, startEntry, exact, search_start, search_stop);
 }
 
-std::deque<namesDB_searchRes> NamesDB::searchAllFromEntry(std::string search, entry_namesDB* startEntry, size_t startID, bool exact){
+std::deque<namesDB_searchRes> NamesDB::searchAllFromEntry(std::string search, entry_namesDB* startEntry, bool exact, size_t startID, size_t endID){
 	FUN();
 	DEBUG_EX("NamesDB::searchAll()");
 
@@ -30,9 +32,8 @@ std::deque<namesDB_searchRes> NamesDB::searchAllFromEntry(std::string search, en
 	entry_namesDB* curStartEntry = startEntry;
 	size_t curStartID = startID;
 
-	while(continue_searching){
-
-		searchRes = searchFirstFromEntry(search, curStartEntry, curStartID, exact);
+	for (curStartID = startID; curStartID <= endID; curStartID++){
+		searchRes = searchFirstFromEntry(search, curStartEntry, exact, curStartID, endID);
 
 		if (searchRes.code == SEARCHRES_NOTFOUND){
 			//The end of the search has been reached
@@ -47,6 +48,25 @@ std::deque<namesDB_searchRes> NamesDB::searchAllFromEntry(std::string search, en
 		curStartEntry = NamesDB::getNextEntry(searchRes.dbEntry);
 		curStartID = searchRes.id+1;
 	}
+
+	/*while(continue_searching){
+
+		searchRes = searchFirstFromEntry(search, curStartEntry, exact, curStartID, endID);
+
+		if (searchRes.code == SEARCHRES_NOTFOUND){
+			//The end of the search has been reached
+			continue_searching = false;
+			continue;
+		} else if (searchRes.code != 0)
+			continue;
+
+		//From here on we are safe, the result code is 0, everything went fine
+		res.push_back(searchRes);
+
+		curStartEntry = NamesDB::getNextEntry(searchRes.dbEntry);
+		curStartID = searchRes.id+1;
+	}
+	*/
 
 	return res;
 }
