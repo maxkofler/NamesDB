@@ -13,6 +13,10 @@ NamesDB::NamesDB(const std::string& title, size_t blockSize) : _title(title){
 	DEBUG_EX("NamesDB::NamesDB()");
 
 	_threads_available = std::thread::hardware_concurrency();
+	if (_threads_available == 0)
+		_threads_available = 1;
+
+	LOGD("[NamesDB] Using up to " + std::to_string(_threads_available) + " threads");
 
 	if (_title == "Untitled"){
 		_title += "_" + std::to_string(untitled_num);

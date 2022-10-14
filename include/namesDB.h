@@ -239,6 +239,16 @@ private:
 	 */
 	size_t						_threads_available = 0;
 
+	/**
+	 * @brief	Searches all occurences of the specified name in a single thread
+	 * @param	name			The name to search for
+	 * @param	exact			If the string has to match exacltly or if it can be a substring
+	 * @param	start_id		The id to start searching from
+	 * @param	end_id			The id to stop searching at (inclusive)
+	 * @return	A deque holding instances of namesDB_searchRes
+	 */
+	std::deque<namesDB_searchRes>	searchAllST(std::string name, bool exact, size_t start_id = 0, size_t end_id = SIZE_MAX);
+
 };
 
 #endif

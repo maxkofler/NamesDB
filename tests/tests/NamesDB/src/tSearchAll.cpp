@@ -26,6 +26,7 @@ TEST(NamesDB, searchAll_debug){
 //Checks if searchAll does take the bounds seriously
 TEST(NamesDB, searchAll_bounds){
 	NamesDB db;
+	db._threads_available = 2;
 	db.add("newEntry", &db);
 	db.add("newSecondEntry", &db);
 
