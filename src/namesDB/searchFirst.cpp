@@ -22,8 +22,66 @@ namesDB_searchRes NamesDB::searchFirst(std::string search, bool exact, size_t se
 		return res;
 	}
 
-	return searchFirstFromEntry(search, curEntry, exact, search_start, search_end);
+	namesDB_searchRes res;
+	res.code = SEARCHRES_NOTFOUND;
 
+	//Create a local c string for fast access
+	size_t len_search = search.length();
+	const char* search_cStr = search.c_str();
+
+	size_t matching_chars = 0;
+	char* name_entry = nullptr;
+
+	for (size_t indexEntries = search_start; indexEntries <= search_end && indexEntries < _count_entries; indexEntries++){
+
+		//If the name of the entry is shorter than the searched string, skip this entry
+		if (curEntry->nameLen < len_search){
+			curEntry = getNextEntry(curEntry);
+			continue;
+		}
+
+		//If searching exactly AND the name length is longer than the search string, skip this entry
+		if (exact && curEntry->nameLen > len_search){
+			curEntry = getNextEntry(curEntry);
+			continue;
+		}
+
+		name_entry = (char*)curEntry + sizeof(entry_namesDB);
+
+		matching_chars = 0;
+		size_t sPos = 0;
+		for (sPos = 0; sPos < curEntry->nameLen && matching_chars < len_search; sPos++){
+			if (search_cStr[matching_chars] == name_entry[sPos]){
+				matching_chars++;
+			} else 
+				matching_chars = 0;
+		}
+
+		#ifdef DEBUG
+		std::string name_entry_string = std::string(name_entry, curEntry->nameLen);
+
+		LOGMEM(	"[NamesDB][searchFirst] Matching characters between " + search + " and " + name_entry_string + 
+				" at pos " + std::to_string(indexEntries) + ": " + 
+				std::to_string(matching_chars) + "/" + std::to_string(search.length()));
+		#endif
+
+		if (matching_chars == len_search){
+			res.code = 0;
+			res.data = curEntry->data;
+			res.matchStart = sPos - len_search;
+			res.matchRemaining = curEntry->nameLen - len_search;
+			res.id = indexEntries;
+			res.dbEntry = curEntry;
+			break;
+		}
+
+		curEntry = (entry_namesDB*)(((uint8_t*)curEntry) + sizeof(entry_namesDB) + curEntry->nameLen);
+	}
+
+	LOGMEM("[NamesDB][searchFirst] Could not find name \"" + search + "\" in database \"" + _title + "\"");
+
+	return res;
+	//return searchFirstFromEntry(search, curEntry, exact, search_start, search_end);
 }
 
 namesDB_searchRes NamesDB::searchFirstFromEntry(std::string search, entry_namesDB* startEntry, bool exact, size_t startID, size_t endID){

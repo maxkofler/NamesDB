@@ -1,7 +1,7 @@
 #ifndef __NAMES_DB_H__
 #define __NAMES_DB_H__
 
-#include <stdlib.h>			//size_t
+#include <stdlib.h>				//size_t
 #include <string>
 #include <deque>
 #include <ostream>
@@ -140,7 +140,7 @@ public:
 	 * @param	end_id			The id to stop searching at (inclusive)
 	 * @return	namesDB_searchRes	The search result
 	 */
-	namesDB_searchRes			searchFirst(std::string name, bool exact, size_t start_id = 0, size_t end_id = SIZE_T_MAX);
+	namesDB_searchRes			searchFirst(std::string name, bool exact, size_t start_id = 0, size_t end_id = SIZE_MAX);
 
 	/**
 	 * @brief	Searches all occurences of the specified name
@@ -150,7 +150,7 @@ public:
 	 * @param	end_id			The id to stop searching at (inclusive)
 	 * @return	A deque holding instances of namesDB_searchRes
 	 */
-	std::deque<namesDB_searchRes>	searchAll(std::string name, bool exact, size_t start_id = 0, size_t end_id = SIZE_T_MAX);
+	std::deque<namesDB_searchRes>	searchAll(std::string name, bool exact, size_t start_id = 0, size_t end_id = SIZE_MAX);
 
 	/**
 	 * @brief	Returns the amount of entries stored in this database
@@ -244,6 +244,11 @@ private:
 	 * 			the index does not get update immediately
 	 */
 	size_t						_size_index_entries = 0;
+
+	/**
+	 * @brief	The amount of threads the searching progress can use (default=system threads)
+	 */
+	size_t						_threads_available = 0;
 
 };
 
