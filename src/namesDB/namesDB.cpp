@@ -4,12 +4,19 @@
 #include "namesDB.h"
 
 #include <cstring>
+#include <thread>
 
 static size_t untitled_num = 0;
 
 NamesDB::NamesDB(const std::string& title, size_t blockSize) : _title(title){
 	FUN();
 	DEBUG_EX("NamesDB::NamesDB()");
+
+	_threads_available = std::thread::hardware_concurrency();
+	if (_threads_available == 0)
+		_threads_available = 1;
+
+	LOGD("[NamesDB] Using up to " + std::to_string(_threads_available) + " threads");
 
 	if (_title == "Untitled"){
 		_title += "_" + std::to_string(untitled_num);
@@ -31,6 +38,9 @@ NamesDB::~NamesDB(){
 
 NamesDB::NamesDB(const NamesDB& other){
 	FUN();
+
+	_threads_available = std::thread::hardware_concurrency();
+
 	LOGMEM("[NamesDB] Creating new database \"" + other._title + "\" from existing one...");
 
 	this->_title = other._title + "_copy" + std::to_string(untitled_num);

@@ -3,48 +3,74 @@
 
 #include "namesDB.h"
 
-std::deque<namesDB_searchRes> NamesDB::searchAll(std::string search, bool exact, size_t search_start){
+#include <future>
+
+std::deque<namesDB_searchRes> NamesDB::searchAll(std::string search, bool exact, size_t startID, size_t endID){
 	FUN();
 	DEBUG_EX("NamesDB::searchAll()");
 
-	entry_namesDB* startEntry = getDBEntry(search_start);
+	size_t real_end = endID;
+	if (endID == SIZE_MAX)
+		real_end = _count_entries;
 
-	if (startEntry == nullptr){
-		std::deque<namesDB_searchRes> res;
-		return res;
+	size_t jobsPerThread = (real_end - startID) / _threads_available;
+	std::deque<std::future<std::deque<namesDB_searchRes>>> futures;
+
+	size_t thread_startID;
+	size_t usable_threads = _threads_available;
+
+	//Safety for not finding entries multiple times
+	if (_count_entries < usable_threads*2)
+		usable_threads = 1;
+
+	for (size_t i = 0; i < usable_threads-1; i++){
+		thread_startID = startID + (jobsPerThread*i);
+		futures.push_back(std::async(&NamesDB::searchAllST, this, search, exact, thread_startID, thread_startID+jobsPerThread-1));
 	}
 
-	return searchAllFromEntry(search, startEntry, search_start, exact);
+	//Handle the last job separately
+	thread_startID = startID + (jobsPerThread * (_threads_available-1));
+	futures.push_back(std::async(&NamesDB::searchAllST, this, search, exact, thread_startID, SIZE_MAX));
+
+	//Wait for all results to come in
+	std::deque<namesDB_searchRes> res;
+	size_t futuresSize = futures.size();
+
+	for (size_t i = 0; i < futuresSize; i++){
+		//LOGU("Thread " + std::to_string(i) + " joined!");
+		for (namesDB_searchRes n : futures.at(i).get())
+			res.push_back(n);
+	}
+	
+	//return searchAllST(search, exact, startID, endID);
+	return res;
 }
 
-std::deque<namesDB_searchRes> NamesDB::searchAllFromEntry(std::string search, entry_namesDB* startEntry, size_t startID, bool exact){
+std::deque<namesDB_searchRes> NamesDB::searchAllST(std::string search, bool exact, size_t startID, size_t endID){
 	FUN();
-	DEBUG_EX("NamesDB::searchAll()");
+	DEBUG_EX("NamesDB::searchAllST()");
 
 	LOGMEM("[NamesDB][searchAll] Searching for all occurences of  \"" + search + "\" from position " + std::to_string(startID) + "...");
 
 	std::deque<namesDB_searchRes> res;
 
-	bool continue_searching = true;
+	const char* search_cStr = search.c_str();
+	size_t search_len = search.length();
+
 	namesDB_searchRes searchRes;
-	entry_namesDB* curStartEntry = startEntry;
 	size_t curStartID = startID;
 
-	while(continue_searching){
+	for (curStartID = startID; curStartID <= endID; curStartID++){
+		searchRes = searchFirst(search_cStr, search_len, exact, curStartID, endID);
 
-		searchRes = searchFirstFromEntry(search, curStartEntry, curStartID, exact);
-
-		if (searchRes.code == SEARCHRES_NOTFOUND){
+		if (searchRes.code == SEARCHRES_NOTFOUND || searchRes.code == SEARCHRES_INVALIDARG){
 			//The end of the search has been reached
-			continue_searching = false;
-			continue;
+			break;
 		} else if (searchRes.code != 0)
 			continue;
 
 		//From here on we are safe, the result code is 0, everything went fine
 		res.push_back(searchRes);
-
-		curStartEntry = NamesDB::getNextEntry(searchRes.dbEntry);
 		curStartID = searchRes.id+1;
 	}
 

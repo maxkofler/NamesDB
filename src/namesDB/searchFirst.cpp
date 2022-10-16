@@ -5,31 +5,26 @@
 
 #include <cstring>
 
-namesDB_searchRes NamesDB::searchFirst(std::string search, bool exact, size_t search_start){
+namesDB_searchRes NamesDB::searchFirst(std::string search, bool exact, size_t search_start, size_t search_end){
+	FUN();
+	
+	return searchFirst(search.c_str(), search.length(), exact, search_start, search_end);
+}
+
+namesDB_searchRes NamesDB::searchFirst(const char* search, size_t search_len, bool exact, size_t startID, size_t endID){
 	FUN();
 	DEBUG_EX("NamesDB::searchFirst()");
 
-	LOGMEM(	"[NamesDB][searchFirst] Searching \"" + _title + "\" for \"" + search + 
-			"\" from position " + std::to_string(search_start) + "...");
+	if (endID != SIZE_MAX)
+		LOGMEM(	"[NamesDB][searchFirst] Searching \"" + _title + "\" for \"" + search + 
+				"\" from position " + std::to_string(startID) + " to " + std::to_string(endID) + "...");	
+	else
+		LOGMEM(	"[NamesDB][searchFirst] Searching \"" + _title + "\" for \"" + search + 
+				"\" from position " + std::to_string(startID) + "...");
 
-	//Get the pointer to the first entry
-	//entry_namesDB* curEntry = (entry_namesDB*)_entries;
-	entry_namesDB* curEntry = getDBEntry(search_start);
+	entry_namesDB* curEntry = getDBEntry(startID);
 
 	if (curEntry == nullptr){
-		namesDB_searchRes res;
-		res.code = SEARCHRES_INVALIDARG;
-		return res;
-	}
-
-	return searchFirstFromEntry(search, curEntry, search_start, exact);
-
-}
-
-namesDB_searchRes NamesDB::searchFirstFromEntry(std::string search, entry_namesDB* startEntry, size_t startID, bool exact){
-	FUN();
-
-	if (startEntry == nullptr){
 		namesDB_searchRes res;
 		res.code = SEARCHRES_INVALIDARG;
 		return res;
@@ -38,31 +33,20 @@ namesDB_searchRes NamesDB::searchFirstFromEntry(std::string search, entry_namesD
 	namesDB_searchRes res;
 	res.code = SEARCHRES_NOTFOUND;
 
-	//Create a local c string for fast access
-	size_t len_search = search.length();
-	//char* name_cStr = new char[len_name+1];
-	//std::memcpy(name_cStr, name.c_str(), len_name);
-	//name_cStr[len_name] = 0;
-	const char* search_cStr = search.c_str();
-
-	//Get the pointer to the first entry
-	//entry_namesDB* curEntry = (entry_namesDB*)_entries;
-	entry_namesDB* curEntry = startEntry;
-
 	size_t matching_chars = 0;
 	char* name_entry = nullptr;
 
-	for (size_t indexEntries = startID; indexEntries < _count_entries; indexEntries++){
+	for (size_t indexEntries = startID; indexEntries <= endID && indexEntries < _count_entries; indexEntries++){
 
-		//If the name of the entry is shorter, skip this entry
-		if (curEntry->nameLen < len_search){
-			curEntry = (entry_namesDB*)(((uint8_t*)curEntry) + sizeof(entry_namesDB) + curEntry->nameLen);
+		//If the name of the entry is shorter than the searched string, skip this entry
+		if (curEntry->nameLen < search_len){
+			curEntry = getNextEntry(curEntry);
 			continue;
 		}
 
-		//If the name of the entry is longer, skip it too
-		if (exact && curEntry->nameLen > len_search){
-			curEntry = (entry_namesDB*)(((uint8_t*)curEntry) + sizeof(entry_namesDB) + curEntry->nameLen);
+		//If searching exactly AND the name length is longer than the search string, skip this entry
+		if (exact && curEntry->nameLen > search_len){
+			curEntry = getNextEntry(curEntry);
 			continue;
 		}
 
@@ -70,8 +54,8 @@ namesDB_searchRes NamesDB::searchFirstFromEntry(std::string search, entry_namesD
 
 		matching_chars = 0;
 		size_t sPos = 0;
-		for (sPos = 0; sPos < curEntry->nameLen && matching_chars < len_search; sPos++){
-			if (search_cStr[matching_chars] == name_entry[sPos]){
+		for (sPos = 0; sPos < curEntry->nameLen && matching_chars < search_len; sPos++){
+			if (search[matching_chars] == name_entry[sPos]){
 				matching_chars++;
 			} else 
 				matching_chars = 0;
@@ -79,27 +63,26 @@ namesDB_searchRes NamesDB::searchFirstFromEntry(std::string search, entry_namesD
 
 		#ifdef DEBUG
 		std::string name_entry_string = std::string(name_entry, curEntry->nameLen);
-
-		LOGMEM(	"[NamesDB][searchFirst] Matching characters between " + search + " and " + name_entry_string + 
+		LOGMEM(	"[NamesDB][searchFirst] Matching characters between " + std::string(search) + " and " + name_entry_string + 
 				" at pos " + std::to_string(indexEntries) + ": " + 
-				std::to_string(matching_chars) + "/" + std::to_string(search.length()));
+				std::to_string(matching_chars) + "/" + std::to_string(search_len));
 		#endif
 
-		if (matching_chars == len_search){
+		if (matching_chars == search_len){
 			res.code = 0;
 			res.data = curEntry->data;
-			res.matchStart = sPos - len_search;
-			res.matchRemaining = curEntry->nameLen - len_search;
+			res.matchStart = sPos - search_len;
+			res.matchRemaining = curEntry->nameLen - search_len;
 			res.id = indexEntries;
 			res.dbEntry = curEntry;
 			break;
 		}
 
-		curEntry = (entry_namesDB*)(((uint8_t*)curEntry) + sizeof(entry_namesDB) + curEntry->nameLen);
+		curEntry = getNextEntry(curEntry);
 	}
 
-	LOGMEM("[NamesDB][searchFirst] Could not find name \"" + search + "\" in database \"" + _title + "\"");
+	if (res.code == SEARCHRES_NOTFOUND)
+		LOGMEM("[NamesDB][searchFirst] Could not find name \"" + std::string(search) + "\" in database \"" + _title + "\"");
 
-	
 	return res;
 }

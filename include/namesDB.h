@@ -1,7 +1,7 @@
 #ifndef __NAMES_DB_H__
 #define __NAMES_DB_H__
 
-#include <stdlib.h>			//size_t
+#include <stdlib.h>				//size_t
 #include <string>
 #include <deque>
 #include <ostream>
@@ -113,40 +113,33 @@ public:
 	/**
 	 * @brief	Searches for the first occurrence of the specified name
 	 * @param	name			The name to search for
-	 * @param	startEntry		The entry to start searching from
-	 * @param	startID			The id of the starting entry
 	 * @param	exact			If the string has to match exactly or if it can be a substring
+	 * @param	startID			The id to start searching from
+	 * @param	endID			The id to stop searching at (inclusive)
 	 * @return	namesDB_searchRes	The search result
 	 */
-	namesDB_searchRes			searchFirstFromEntry(std::string name, entry_namesDB* startEntry, size_t startID, bool exact);
+	namesDB_searchRes			searchFirst(std::string name, bool exact, size_t startID = 0, size_t endID = SIZE_MAX);
 
 	/**
-	 * @brief	Searches all occurences of the specified name
+	 * @brief	Searches for the first occurence of the specified name
 	 * @param	name			The name to search for
-	 * @param	startEntry		The entry to start searching from
-	 * @param	startID			The id of the starting entry
+	 * @param	nameLen			The length of the name
 	 * @param	exact			If the string has to match exactly or if it can be a substring
-	 * @return	A deque holding instances of namesDB_searchRes
-	 */
-	std::deque<namesDB_searchRes>	searchAllFromEntry(std::string name, entry_namesDB* startEntry, size_t startID, bool exact);
-
-	/**
-	 * @brief	Searches for the first occurrence of the specified name
-	 * @param	name			The name to search for
-	 * @param	exact			If the string has to match exactly or if it can be a substring
-	 * @param	start_id		The id to start searching from
+	 * @param	startID			The id to start searching from
+	 * @param	endID			The id to stop searching at (inclusive)
 	 * @return	namesDB_searchRes	The search result
 	 */
-	namesDB_searchRes			searchFirst(std::string name, bool exact, size_t start_id = 0);
+	namesDB_searchRes			searchFirst(const char* name, size_t nameLen, bool exact, size_t startID = 0, size_t endID = SIZE_MAX);
 
 	/**
 	 * @brief	Searches all occurences of the specified name
 	 * @param	name			The name to search for
 	 * @param	exact			If the string has to match exacltly or if it can be a substring
 	 * @param	start_id		The id to start searching from
+	 * @param	end_id			The id to stop searching at (inclusive)
 	 * @return	A deque holding instances of namesDB_searchRes
 	 */
-	std::deque<namesDB_searchRes>	searchAll(std::string name, bool exact, size_t start_id = 0);
+	std::deque<namesDB_searchRes>	searchAll(std::string name, bool exact, size_t start_id = 0, size_t end_id = SIZE_MAX);
 
 	/**
 	 * @brief	Returns the amount of entries stored in this database
@@ -240,6 +233,21 @@ private:
 	 * 			the index does not get update immediately
 	 */
 	size_t						_size_index_entries = 0;
+
+	/**
+	 * @brief	The amount of threads the searching progress can use (default=system threads)
+	 */
+	size_t						_threads_available = 0;
+
+	/**
+	 * @brief	Searches all occurences of the specified name in a single thread
+	 * @param	name			The name to search for
+	 * @param	exact			If the string has to match exacltly or if it can be a substring
+	 * @param	start_id		The id to start searching from
+	 * @param	end_id			The id to stop searching at (inclusive)
+	 * @return	A deque holding instances of namesDB_searchRes
+	 */
+	std::deque<namesDB_searchRes>	searchAllST(std::string name, bool exact, size_t start_id = 0, size_t end_id = SIZE_MAX);
 
 };
 
