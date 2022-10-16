@@ -25,12 +25,17 @@ TEST(NamesDB, searchAll_debug){
 
 //Checks if searchAll does take the bounds seriously
 TEST(NamesDB, searchAll_bounds){
+	FUN();
+
 	NamesDB db;
-	db._threads_available = 2;
+	db._threads_available = 1;
 	db.add("newEntry", &db);
 	db.add("newSecondEntry", &db);
 
 	auto res = db.searchAll("new", false, 0, 0);
+	ASSERT_EQ(1, res.size()) << "Found wrong count of entries";
 
-	ASSERT_EQ(1, res.size());
+	db._threads_available = 2;
+	res = db.searchAll("new", false, 0, 0);
+	ASSERT_EQ(1, res.size()) << "Found wrong count of entries when using multithreading";
 }

@@ -16,15 +16,14 @@ std::deque<namesDB_searchRes> NamesDB::searchAll(std::string search, bool exact,
 	size_t jobsPerThread = (real_end - startID) / _threads_available;
 	std::deque<std::future<std::deque<namesDB_searchRes>>> futures;
 
-	LOGU("startID: " + std::to_string(startID));
-	LOGU("endID: " + std::to_string(endID));
-	LOGU("_count_entries: " + std::to_string(_count_entries));
-	LOGU("real_end: " + std::to_string(real_end));
-	LOGU("Test: " + std::to_string(real_end - startID));
-	LOGU("JobsPerThread " + std::to_string(jobsPerThread));
-
 	size_t thread_startID;
-	for (size_t i = 0; i < _threads_available-1; i++){
+	size_t usable_threads = _threads_available;
+
+	//Safety for not finding entries multiple times
+	if (_count_entries < usable_threads*2)
+		usable_threads = 1;
+
+	for (size_t i = 0; i < usable_threads-1; i++){
 		thread_startID = startID + (jobsPerThread*i);
 		futures.push_back(std::async(&NamesDB::searchAllST, this, search, exact, thread_startID, thread_startID+jobsPerThread-1));
 	}
