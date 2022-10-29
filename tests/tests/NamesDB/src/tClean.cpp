@@ -32,7 +32,7 @@ TEST(NamesDB, clean_debug){
 }
 
 /**
- * @brief	Tests if NamesDB::clean() works correctly
+ * @brief	Tests if NamesDBT::clean() works correctly
  */
 TEST(NamesDB, clean_correct){
 	FUN();

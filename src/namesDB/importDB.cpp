@@ -1,12 +1,12 @@
 #include "log.h"
 #include "debug.h"
 
-#include "namesDB.h"
+#include "namesDBt.h"
 
 #include <exception>
 
 //TODO: Tests
-bool NamesDB::importDB(std::istream& instream){
+bool NamesDBT::importDB(std::istream& instream){
 	FUN();
 	DEBUG_EX("NamesDB::importDB()");
 

@@ -1,14 +1,14 @@
 #include "log.h"
 #include "debug.h"
 
-#include "namesDB.h"
+#include "namesDBt.h"
 
 #include <cstring>
 
 #include <assert.h>
 static_assert(sizeof(uint64_t) + sizeof(uint8_t) == sizeof(entry_namesDB), "Size of entry_namesDB changed, adjust this file!");
 
-size_t NamesDB::add(const std::string& str, uint64_t entry_insert){
+size_t NamesDBT::add(const std::string& str, uint64_t entry_insert){
 	FUN();
 	DEBUG_EX("NamesDB::add()");
 

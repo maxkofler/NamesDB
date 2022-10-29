@@ -1,11 +1,11 @@
 #include "log.h"
 #include "debug.h"
 
-#include "namesDB.h"
+#include "namesDBt.h"
 
 #include <future>
 
-std::deque<namesDB_searchRes> NamesDB::searchAll(std::string search, bool exact, size_t startID, size_t endID){
+std::deque<namesDB_searchRes> NamesDBT::searchAll(std::string search, bool exact, size_t startID, size_t endID){
 	FUN();
 	DEBUG_EX("NamesDB::searchAll()");
 
@@ -25,12 +25,12 @@ std::deque<namesDB_searchRes> NamesDB::searchAll(std::string search, bool exact,
 
 	for (size_t i = 0; i < usable_threads-1; i++){
 		thread_startID = startID + (jobsPerThread*i);
-		futures.push_back(std::async(&NamesDB::searchAllST, this, search, exact, thread_startID, thread_startID+jobsPerThread-1));
+		futures.push_back(std::async(&NamesDBT::searchAllST, this, search, exact, thread_startID, thread_startID+jobsPerThread-1));
 	}
 
 	//Handle the last job separately
 	thread_startID = startID + (jobsPerThread * (_threads_available-1));
-	futures.push_back(std::async(&NamesDB::searchAllST, this, search, exact, thread_startID, SIZE_MAX));
+	futures.push_back(std::async(&NamesDBT::searchAllST, this, search, exact, thread_startID, SIZE_MAX));
 
 	//Wait for all results to come in
 	std::deque<namesDB_searchRes> res;
@@ -46,7 +46,7 @@ std::deque<namesDB_searchRes> NamesDB::searchAll(std::string search, bool exact,
 	return res;
 }
 
-std::deque<namesDB_searchRes> NamesDB::searchAllST(std::string search, bool exact, size_t startID, size_t endID){
+std::deque<namesDB_searchRes> NamesDBT::searchAllST(std::string search, bool exact, size_t startID, size_t endID){
 	FUN();
 	DEBUG_EX("NamesDB::searchAllST()");
 

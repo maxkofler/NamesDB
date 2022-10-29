@@ -1,9 +1,9 @@
 #include "log.h"
 #include "debug.h"
 
-#include "namesDB.h"
+#include "namesDBt.h"
 
-uint64_t NamesDB::getEntry(size_t id){
+uint64_t NamesDBT::getEntry(size_t id){
 	FUN();
 	DEBUG_EX("NamesDB::getEntry()");
 

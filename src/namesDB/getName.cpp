@@ -1,14 +1,14 @@
 #include "log.h"
 #include "debug.h"
 
-#include "namesDB.h"
+#include "namesDBt.h"
 
 #include <cstring>
 
 #include <assert.h>
 static_assert(sizeof(void*) + sizeof(uint8_t) == sizeof(entry_namesDB), "Size of entry_namesDB changed, adjust this file!");
 
-std::string NamesDB::getName(size_t id){
+std::string NamesDBT::getName(size_t id){
 	FUN();
 	DEBUG_EX("NamesDB::getName()");
 
@@ -25,7 +25,7 @@ std::string NamesDB::getName(size_t id){
 	return getEntryName(curEntry);
 }
 
-std::string NamesDB::getEntryName(entry_namesDB* entry){
+std::string NamesDBT::getEntryName(entry_namesDB* entry){
 	FUN();
 
 	//Allocate memory for the name to copy to, including the nullterminator

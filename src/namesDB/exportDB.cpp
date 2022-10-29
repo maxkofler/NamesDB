@@ -1,10 +1,10 @@
 #include "log.h"
 #include "debug.h"
 
-#include "namesDB.h"
+#include "namesDBt.h"
 
 //TODO: Tests
-void NamesDB::exportDB(std::ostream& outStream){
+void NamesDBT::exportDB(std::ostream& outStream){
 	FUN();
 	DEBUG_EX("NamesDB::exportDB()");
 

@@ -1,11 +1,11 @@
 #include "log.h"
 #include "debug.h"
 
-#include "namesDB.h"
+#include "namesDBt.h"
 
 //TODO: Tests
 
-void NamesDB::append(NamesDB& db){
+void NamesDBT::append(NamesDBT& db){
 	FUN();
 	DEBUG_EX("NamesDB::append()");
 

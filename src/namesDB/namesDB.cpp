@@ -1,14 +1,14 @@
 #include "log.h"
 #include "debug.h"
 
-#include "namesDB.h"
+#include "namesDBt.h"
 
 #include <cstring>
 #include <thread>
 
 static size_t untitled_num = 0;
 
-NamesDB::NamesDB(const std::string& title, size_t blockSize) : _title(title){
+NamesDBT::NamesDBT(const std::string& title, size_t blockSize) : _title(title){
 	FUN();
 	DEBUG_EX("NamesDB::NamesDB()");
 
@@ -30,13 +30,13 @@ NamesDB::NamesDB(const std::string& title, size_t blockSize) : _title(title){
 	this->expand(1);
 }
 
-NamesDB::~NamesDB(){
+NamesDBT::~NamesDBT(){
 	FUN();
 
 	this->clean();
 }
 
-NamesDB::NamesDB(const NamesDB& other){
+NamesDBT::NamesDBT(const NamesDBT& other){
 	FUN();
 
 	_threads_available = std::thread::hardware_concurrency();

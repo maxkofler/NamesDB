@@ -1,9 +1,9 @@
 #include "log.h"
 #include "debug.h"
 
-#include "namesDB.h"
+#include "namesDBt.h"
 
-void NamesDB::updateIndex(){
+void NamesDBT::updateIndex(){
     FUN();
     DEBUG_EX("NamesDB::updateIndex()");
     

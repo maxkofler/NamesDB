@@ -1,9 +1,9 @@
 #include "log.h"
 #include "debug.h"
 
-#include "namesDB.h"
+#include "namesDBt.h"
 
-void NamesDB::clean(){
+void NamesDBT::clean(){
 	FUN();
 	DEBUG_EX("NamesDB::clean()");
 

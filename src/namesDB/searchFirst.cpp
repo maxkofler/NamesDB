@@ -1,17 +1,17 @@
 #include "log.h"
 #include "debug.h"
 
-#include "namesDB.h"
+#include "namesDBt.h"
 
 #include <cstring>
 
-namesDB_searchRes NamesDB::searchFirst(std::string search, bool exact, size_t search_start, size_t search_end){
+namesDB_searchRes NamesDBT::searchFirst(std::string search, bool exact, size_t search_start, size_t search_end){
 	FUN();
 	
 	return searchFirst(search.c_str(), search.length(), exact, search_start, search_end);
 }
 
-namesDB_searchRes NamesDB::searchFirst(const char* search, size_t search_len, bool exact, size_t startID, size_t endID){
+namesDB_searchRes NamesDBT::searchFirst(const char* search, size_t search_len, bool exact, size_t startID, size_t endID){
 	FUN();
 	DEBUG_EX("NamesDB::searchFirst()");
 
