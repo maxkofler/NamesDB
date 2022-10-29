@@ -8,7 +8,7 @@
 #include <istream>
 
 struct entry_namesDB{
-	void*						data;
+	uint64_t					data;
 	uint8_t						nameLen;
 } __attribute__((packed));
 
@@ -19,7 +19,7 @@ struct namesDB_searchRes{
 	int8_t						code = 0;
 	uint8_t						matchStart = 0;		//The place the match starts in the results name
 	uint8_t						matchRemaining = 0;	//The remaining characters that did not match of the name (is name.length - search.length)
-	void*						data;
+	uint64_t					data;
 	size_t						id;
 	entry_namesDB*				dbEntry;
 };
@@ -61,7 +61,7 @@ public:
 	 * @param	entry			The entry to register
 	 * @return	size_t			The id of the name
 	 */
-	size_t						add(const std::string& str, void* entry);
+	size_t						add(const std::string& str, uint64_t entry);
 
 	/**
 	 * @brief	Changes the name of the database
@@ -86,7 +86,7 @@ public:
 	 * @return	void*			The entry previously supplied to add(), nullptr if out of range
 	 * @note	This function is slow, it iterates over every entry, don't use it if not necessary
 	 */
-	void*						getEntry(size_t id);
+	uint64_t					getEntry(size_t id);
 
 	/**
 	 * @brief	Searches for the database entry with the supplied id and returns a pointer to it

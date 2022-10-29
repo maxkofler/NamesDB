@@ -3,14 +3,15 @@
 
 #include "namesDB.h"
 
-void* NamesDB::getEntry(size_t id){
+uint64_t NamesDB::getEntry(size_t id){
 	FUN();
 	DEBUG_EX("NamesDB::getEntry()");
 
 	entry_namesDB* curEntry = getDBEntry(id);
 
+	#warning Check this return value
 	if (curEntry == nullptr)
-		return nullptr;
+		return 0;
 	else
 		return curEntry->data;
 }
