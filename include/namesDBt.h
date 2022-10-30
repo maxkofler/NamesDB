@@ -15,7 +15,7 @@ struct entry_namesDB{
 #define SEARCHRES_NOTFOUND -1
 #define SEARCHRES_INVALIDARG -2
 
-struct namesDB_searchRes{
+struct namesDBt_searchRes{
 	int8_t						code = 0;
 	uint8_t						matchStart = 0;		//The place the match starts in the results name
 	uint8_t						matchRemaining = 0;	//The remaining characters that did not match of the name (is name.length - search.length)
@@ -118,7 +118,7 @@ public:
 	 * @param	endID			The id to stop searching at (inclusive)
 	 * @return	namesDB_searchRes	The search result
 	 */
-	namesDB_searchRes			searchFirst(std::string name, bool exact, size_t startID = 0, size_t endID = SIZE_MAX);
+	namesDBt_searchRes			searchFirst(std::string name, bool exact, size_t startID = 0, size_t endID = SIZE_MAX);
 
 	/**
 	 * @brief	Searches for the first occurence of the specified name
@@ -129,7 +129,7 @@ public:
 	 * @param	endID			The id to stop searching at (inclusive)
 	 * @return	namesDB_searchRes	The search result
 	 */
-	namesDB_searchRes			searchFirst(const char* name, size_t nameLen, bool exact, size_t startID = 0, size_t endID = SIZE_MAX);
+	namesDBt_searchRes			searchFirst(const char* name, size_t nameLen, bool exact, size_t startID = 0, size_t endID = SIZE_MAX);
 
 	/**
 	 * @brief	Searches all occurences of the specified name
@@ -139,7 +139,7 @@ public:
 	 * @param	end_id			The id to stop searching at (inclusive)
 	 * @return	A deque holding instances of namesDB_searchRes
 	 */
-	std::deque<namesDB_searchRes>	searchAll(std::string name, bool exact, size_t start_id = 0, size_t end_id = SIZE_MAX);
+	std::deque<namesDBt_searchRes>	searchAll(std::string name, bool exact, size_t start_id = 0, size_t end_id = SIZE_MAX);
 
 	/**
 	 * @brief	Returns the amount of entries stored in this database
@@ -177,7 +177,7 @@ public:
 	 */
 	static entry_namesDB*		getNextEntry(entry_namesDB* cur);
 
-#ifndef FRIEND_NAMES_DB
+#ifndef FRIEND_NAMES_DB_T
 private:
 #endif
 
@@ -247,7 +247,7 @@ private:
 	 * @param	end_id			The id to stop searching at (inclusive)
 	 * @return	A deque holding instances of namesDB_searchRes
 	 */
-	std::deque<namesDB_searchRes>	searchAllST(std::string name, bool exact, size_t start_id = 0, size_t end_id = SIZE_MAX);
+	std::deque<namesDBt_searchRes>	searchAllST(std::string name, bool exact, size_t start_id = 0, size_t end_id = SIZE_MAX);
 
 };
 
