@@ -7,16 +7,17 @@ TEST(NamesDB_Stress, searchAll_loads_of_names){
 	FUN();
 	using namespace std::chrono;
 
+	std::string name = "name";
 	std::string finalName = "TheFinalName";
 
-	NamesDB db;
+	NamesDB<std::string> db;
 	size_t num = 1000;
 
 	Log::level oldLevel = hlog->getLevel();
 	hlog->setLevel(Log::U);
 	for (size_t n = 0; n < num; n++){
 		for (size_t i = 0; i < 1000; i++){
-			db.add("Entry" + std::to_string(i),  &db);
+			db.add("Entry" + std::to_string(i), &name);
 		}
 		db.add(finalName, &finalName);
 	}
@@ -27,7 +28,7 @@ TEST(NamesDB_Stress, searchAll_loads_of_names){
 	{
 		auto indexStart = high_resolution_clock::now();
 		hlog->setLevel(Log::U);
-		std::deque<namesDB_searchRes> res = db.searchAll(finalName, false);
+		std::deque<namesDB_searchRes<std::string>> res = db.searchAll(finalName, false);
 		hlog->setLevel(oldLevel);
 		auto indexStop = high_resolution_clock::now();
 		auto indexDuration = duration_cast<milliseconds>(indexStop - indexStart);
@@ -37,10 +38,10 @@ TEST(NamesDB_Stress, searchAll_loads_of_names){
 	}
 	
 	{
-		db._threads_available = 1;
+		db._db._threads_available = 1;
 		auto indexStart = high_resolution_clock::now();
 		hlog->setLevel(Log::U);
-		std::deque<namesDB_searchRes> res = db.searchAll(finalName, false);
+		std::deque<namesDB_searchRes<std::string>> res = db.searchAll(finalName, false);
 		hlog->setLevel(oldLevel);
 		auto indexStop = high_resolution_clock::now();
 		auto indexDuration = duration_cast<milliseconds>(indexStop - indexStart);

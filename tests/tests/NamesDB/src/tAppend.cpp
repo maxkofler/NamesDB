@@ -3,11 +3,14 @@
 TEST(NamesDB, append){
 	FUN();
 
-	NamesDB db1;
-	db1.add("db1", &db1);
+	int int1 = 0;
+	int int2 = 1;
 
-	NamesDB db2;
-	db2.add("db2", &db2);
+	NamesDB<int> db1;
+	db1.add("int1", &int1);
+
+	NamesDB<int> db2;
+	db2.add("int2", &int2);
 	db2.add("dbnul", nullptr);
 
 	ASSERT_EQ(1, db1.getEntriesCount()) << "DB1 has more than 1 entry";

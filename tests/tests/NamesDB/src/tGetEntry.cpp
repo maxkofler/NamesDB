@@ -8,7 +8,7 @@ TEST(NamesDB, getEntry_debug){
 	try{
 		DEBUG_FAIL_FUN(funName);
 
-		NamesDB db;
+		NamesDB<int> db;
 		db.getEntry(db.add("NewEntry", nullptr));
 
 		F_NOTHROW(funName + " - debug");
@@ -25,7 +25,7 @@ TEST(NamesDB, getEntry_debug){
 TEST(NamesDB, getEntry_id_out_of_range){
 	FUN();
 
-	NamesDB db;
+	NamesDB<int> db;
 
 	EXPECT_EQ(nullptr, db.getEntry(0));
 	EXPECT_EQ(nullptr, db.getEntry(1));
@@ -42,7 +42,7 @@ TEST(NamesDB, getEntry_correct_return){
 	std::string name = "This is my name!";
 	std::string name2 = "This is a second name!";
 
-	NamesDB db;
+	NamesDB<std::string> db;
 
 	size_t id = db.add(name, &name);
 	size_t id2 = db.add(name2, &name2);
@@ -54,7 +54,7 @@ TEST(NamesDB, getEntry_correct_return){
 TEST(NamesDB, getEntry_empty){
 	FUN();
 
-	NamesDB db;
+	NamesDB<int> db;
 
 	EXPECT_EQ(nullptr, db.getEntry(0));
 }

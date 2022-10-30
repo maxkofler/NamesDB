@@ -103,7 +103,7 @@ public:
 	 */
 	T*							getEntry(size_t id){
 		FUN();
-		return _db.getEntry(id);
+		return (T*)_db.getEntry(id);
 	}
 
 	/**
@@ -111,11 +111,11 @@ public:
 	 * @param	id				The id of the searched entry
 	 * @return	entry_namesDB*	A pointer to the db entry
 	 */
-	entry_namesDB*				getDBEntry(size_t id){
+	/*entry_namesDB*				getDBEntry(size_t id){
 		FUN();
 		return nullptr;
 		#warning removed
-	}
+	}*/
 
 	/**
 	 * @brief	Gets the name string of the specified id (is really slow, read note)
@@ -129,17 +129,6 @@ public:
 	}
 
 	/**
-	 * @brief	Gets the name string of the specified entry
-	 * @param	entry			The entry to get the name from
-	 * @return	std::string		The name previously supplied to add()
-	 */
-	static std::string			getEntryName(entry_namesDB* entry){
-		FUN();
-		#warning remove
-		return "";
-	}
-
-	/**
 	 * @brief	Searches for the first occurrence of the specified name
 	 * @param	name			The name to search for
 	 * @param	exact			If the string has to match exactly or if it can be a substring
@@ -149,7 +138,8 @@ public:
 	 */
 	namesDB_searchRes<T>		searchFirst(std::string name, bool exact, size_t startID = 0, size_t endID = SIZE_MAX){
 		FUN();
-		return toSearchRes(_db.searchFirst(name, exact, startID, endID));
+		auto resT = _db.searchFirst(name, exact, startID, endID);
+		return toSearchRes(resT);
 	}
 
 	/**
@@ -163,7 +153,8 @@ public:
 	 */
 	namesDB_searchRes<T>			searchFirst(const char* name, size_t nameLen, bool exact, size_t startID = 0, size_t endID = SIZE_MAX){
 		FUN();
-		return toSearchRes(_db.searchFirst(name, exact, startID, endID));
+		auto resT = _db.searchFirst(name, exact, startID, endID);
+		return toSearchRes(resT);
 	}
 
 	/**
@@ -233,13 +224,14 @@ private:
 
 	NamesDBT					_db;
 
-	namesDB_searchRes<T>		toSearchRes(namesDBt_searchRes& resT){
+	namesDB_searchRes<T>		toSearchRes(const namesDBt_searchRes& resT){
 		namesDB_searchRes<T> res;
 		res.code = resT.code;
 		res.matchStart = resT.matchStart;
 		res.matchRemaining = resT.matchRemaining;
 		res.data = (T*)resT.data;
 		res.id = resT.id;
+		return res;
 	}
 
 };

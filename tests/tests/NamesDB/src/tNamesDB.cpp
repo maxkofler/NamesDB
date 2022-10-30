@@ -8,7 +8,7 @@ TEST(NamesDB, NamesDB_constructor_debug){
 	try{
 		DEBUG_FAIL_FUN(funName);
 
-		NamesDB db;
+		NamesDB<int> db;
 
 		F_NOTHROW(funName + " - debug");
 	} catch (DebugException* e){
@@ -23,15 +23,15 @@ TEST(NamesDB, NamesDB_constructor_debug){
 TEST(NamesDB, NamesDB_constructor_default_blocksize){
 	FUN();
 
-	NamesDB db;
+	NamesDB<int> db;
 
-	ASSERT_EQ(1024, db._blockSize);
+	ASSERT_EQ(1024, db._db._blockSize);
 }
 
 TEST(NamesDB, NamesDB_constructor_specified_blocksize){
 	FUN();
 
-	NamesDB db("Untitled", 100234);
+	NamesDB<int> db("Untitled", 100234);
 
-	ASSERT_EQ(100234, db._blockSize);
+	ASSERT_EQ(100234, db._db._blockSize);
 }

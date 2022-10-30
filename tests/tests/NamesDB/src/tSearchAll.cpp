@@ -8,7 +8,7 @@ TEST(NamesDB, searchAll_debug){
 	try{
 		DEBUG_FAIL_FUN(funName);
 
-		NamesDB db;
+		NamesDB<int> db;
 		db.add("NewEntry", nullptr);
 
 		db.searchAll("Entry", false);
@@ -27,15 +27,18 @@ TEST(NamesDB, searchAll_debug){
 TEST(NamesDB, searchAll_bounds){
 	FUN();
 
-	NamesDB db;
-	db._threads_available = 1;
-	db.add("newEntry", &db);
-	db.add("newSecondEntry", &db);
+	std::string str1 = "String1";
+	std::string str2 = "String2";
+
+	NamesDB<std::string> db;
+	db._db._threads_available = 1;
+	db.add("newEntry", &str1);
+	db.add("newSecondEntry", &str2);
 
 	auto res = db.searchAll("new", false, 0, 0);
 	ASSERT_EQ(1, res.size()) << "Found wrong count of entries";
 
-	db._threads_available = 2;
+	db._db._threads_available = 2;
 	res = db.searchAll("new", false, 0, 0);
 	ASSERT_EQ(1, res.size()) << "Found wrong count of entries when using multithreading";
 }

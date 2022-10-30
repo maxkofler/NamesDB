@@ -4,12 +4,13 @@
 TEST(NamesDB_Stress, searchFirst_loads_of_names){
 	FUN();
 
+	std::string name = "name";
 	std::string finalName = "TheFinalName";
 
-	NamesDB db;
+	NamesDB<std::string> db;
 
 	for (size_t i = 0; i < 500; i++){
-		db.add("Entry" + std::to_string(i),  &db);
+		db.add("Entry" + std::to_string(i), &name);
 	}
 
 	db.add(finalName, &finalName);

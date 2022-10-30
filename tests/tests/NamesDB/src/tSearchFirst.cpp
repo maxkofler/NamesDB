@@ -8,7 +8,7 @@ TEST(NamesDB, searchFirst_debug){
 	try{
 		DEBUG_FAIL_FUN(funName);
 
-		NamesDB db;
+		NamesDB<int> db;
 		db.searchFirst("noName", true);
 
 		F_NOTHROW(funName + " - debug");
@@ -27,18 +27,16 @@ TEST(NamesDB, searchFirst_find_name){
 	std::string name = "SomeRandomName";
 	std::string name2 = "SomeOtherRandomName2";
 
-	void* wrongpointer = (void*) &name;
+	NamesDB<std::string> db;
 
-	NamesDB db;
-
-	size_t id = db.add(name, &db);
-	size_t id2 = db.add(name2, wrongpointer);
+	size_t id = db.add(name, &name);
+	size_t id2 = db.add(name2, &name2);
 
 	ASSERT_EQ(0, db.searchFirst(name, true).code) << "Could not find the entry";
-	ASSERT_EQ(&db, db.searchFirst(name, true).data);
+	ASSERT_EQ(&name, db.searchFirst(name, true).data);
 
 	ASSERT_EQ(0, db.searchFirst(name2, true).code) << "Could not find the entry";
-	ASSERT_EQ(wrongpointer, db.searchFirst(name2, true).data);
+	ASSERT_EQ(&name2, db.searchFirst(name2, true).data);
 }
 
 //Tests if searchFirst() finds a name that is scattered throughout a string
@@ -47,11 +45,9 @@ TEST(NamesDB, searchFirst_find_scattered_name){
 
 	std::string name = "SCmyOisgnNdfsnhklnTnoeENladT";
 
-	void* wrongpointer = (void*) &name;
+	NamesDB<std::string> db;
 
-	NamesDB db;
-
-	size_t id = db.add(name, &db);
+	size_t id = db.add(name, &name);
 
 	ASSERT_NE(0, db.searchFirst("CONTENT", false).code) << "Found a scattered name, this should not be";
 }
@@ -63,18 +59,16 @@ TEST(NamesDB, searchFirst_similar){
 	std::string contentWrong = "myContentIsWrong";
 	std::string contentTrue = "Content";
 
-	NamesDB db;
+	NamesDB<std::string> db;
 
-	void* wrongpointer = (void*) &contentWrong;
-
-	size_t idW = db.add(contentWrong, wrongpointer);
-	size_t idT = db.add(contentTrue, &db);
+	size_t idW = db.add(contentWrong, &contentWrong);
+	size_t idT = db.add(contentTrue, &contentTrue);
 
 	{	//Check if the search find the wrong entry
 		namesDB_searchRes res = db.searchFirst("Content", true);
 
 		ASSERT_EQ(0, res.code) << "Could not find the required string";
-		EXPECT_NE(wrongpointer, res.data) << "Found the wrong item that was similar";
+		EXPECT_NE(&contentWrong, res.data) << "Found the wrong item that was similar";
 	}
 
 	{	//Check if the search for "myContent" works correctly
@@ -91,12 +85,12 @@ TEST(NamesDB, searchFirst_find_content_start){
 	std::string content = "Content";
 	std::string name = content + "IsHere";
 
-	NamesDB db;
+	NamesDB<std::string> db;
 
-	size_t id = db.add(name, &db);
+	size_t id = db.add(name, &content);
 
 	ASSERT_EQ(0, db.searchFirst(content, false).code) << "Could not find the required string";
-	ASSERT_EQ(&db, db.searchFirst(content, false).data) << "Found the wrong entry";
+	ASSERT_EQ(&content, db.searchFirst(content, false).data) << "Found the wrong entry";
 }
 
 TEST(NamesDB, searchFirst_find_content_middle){
@@ -105,12 +99,12 @@ TEST(NamesDB, searchFirst_find_content_middle){
 	std::string content = "Content";
 	std::string name = "SomeNameWith" + content + "IsHere";
 
-	NamesDB db;
+	NamesDB<std::string> db;
 
-	size_t id = db.add(name, &db);
+	size_t id = db.add(name, &content);
 
 	ASSERT_EQ(0, db.searchFirst(content, false).code) << "Could not find the required string";
-	ASSERT_EQ(&db, db.searchFirst(content, false).data) << "Found the wrong entry";	//FAILS BECAUSE IMPLEMENTATION IS FLAWED!
+	ASSERT_EQ(&content, db.searchFirst(content, false).data) << "Found the wrong entry";	//FAILS BECAUSE IMPLEMENTATION IS FLAWED!
 }
 
 TEST(NamesDB, searchFirst_find_content_end){
@@ -119,12 +113,12 @@ TEST(NamesDB, searchFirst_find_content_end){
 	std::string content = "Content";
 	std::string name = "SomeNameWithLoadsOfCharactersAndTheContentIsAtTheEnd" + content;
 
-	NamesDB db;
+	NamesDB<std::string> db;
 
-	size_t id = db.add(name, &db);
+	size_t id = db.add(name, &content);
 
 	ASSERT_EQ(0, db.searchFirst(content, false).code) << "Could not find the required string";
-	ASSERT_EQ(&db, db.searchFirst(content, false).data) << "Found the wrong entry";	//FAILS BECAUSE IMPLEMENTATION IS FLAWED!
+	ASSERT_EQ(&content, db.searchFirst(content, false).data) << "Found the wrong entry";	//FAILS BECAUSE IMPLEMENTATION IS FLAWED!
 }
 
 //Tests if the argument "search_start" works
@@ -134,10 +128,10 @@ TEST(NamesDB, searchFirst_find_from_start_index){
 	std::string searchedString = "Content";
 	std::string otherString = "Some random entry in the database...";
 
-	NamesDB db;
+	NamesDB<std::string> db;
 
-	void* firstPointer = (void*) 1;
-	void* secondPointer = (void*) 2;
+	std::string* firstPointer = (std::string*) 1;
+	std::string* secondPointer = (std::string*) 2;
 
 	db.add(searchedString, firstPointer);
 	db.add(otherString, nullptr);

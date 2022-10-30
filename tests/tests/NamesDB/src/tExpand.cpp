@@ -10,7 +10,7 @@ TEST(NamesDB, expand_constructor){
 	try{
 		DEBUG_FAIL_FUN(fun_name);
 
-		NamesDB db;
+		NamesDB<int> db;
 
 		F_NOTHROW(fun_name + " - debug");
 	} catch (DebugException* e){
@@ -25,7 +25,7 @@ TEST(NamesDB, expand_constructor){
 TEST(NamesDB, expand_general){
 	FUN();
 
-	NamesDB db;
+	NamesDB<int> db;
 
 	ASSERT_TRUE(db.expand());
 }
@@ -36,12 +36,12 @@ TEST(NamesDB, expand_general){
 TEST(NamesDB, expand_zero){
 	FUN();
 
-	NamesDB db;
+	NamesDB<int> db;
 
-	delete db._entries;
-	db._entries = nullptr;
+	delete db._db._entries;
+	db._db._entries = nullptr;
 
 	db.expand(1);
 
-	ASSERT_NE(nullptr, db._entries);
+	ASSERT_NE(nullptr, db._db._entries);
 }

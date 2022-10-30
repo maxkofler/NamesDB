@@ -3,14 +3,14 @@
 TEST(NamesDB, getTitle){
 	FUN();
 
-	NamesDB db("MyTitle");
-	ASSERT_EQ("MyTitle", db._title);
+	NamesDB<int> db("MyTitle");
+	ASSERT_EQ("MyTitle", db._db._title);
 }
 
 TEST(NamesDB, setTitle){
 	FUN();
 
-	NamesDB db;
+	NamesDB<int> db;
 
 	std::string oldTitle = db.getTitle();
 	db.setTitle("NewTitle" + oldTitle);
