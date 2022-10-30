@@ -5,6 +5,15 @@
 #include "namesDBt.h"
 
 template<typename T>
+struct namesDB_searchRes{
+	int8_t						code = 0;
+	uint8_t						matchStart = 0;		//The place the match starts in the results name
+	uint8_t						matchRemaining = 0;	//The remaining characters that did not match of the name (is name.length - search.length)
+	T*							data;
+	size_t						id;
+};
+
+template<typename T>
 class NamesDB{
 
 public:
@@ -38,6 +47,7 @@ public:
 	 */
 	bool						expand(uint8_t count = 1){
 		FUN();
+		return _db.expand(count);
 	}
 
 	/**
@@ -45,6 +55,7 @@ public:
 	 */
 	void						clean(){
 		FUN();
+		_db.clean();
 	}
 
 	/**
@@ -53,8 +64,9 @@ public:
 	 * @param	entry			The entry to register
 	 * @return	size_t			The id of the name
 	 */
-	size_t						add(const std::string& str, uint64_t entry){
+	size_t						add(const std::string& str, T* entry){
 		FUN();
+		return _db.add(str, (uint64_t) entry);
 	}
 
 	/**
@@ -63,6 +75,7 @@ public:
 	 */
 	void						setTitle(const std::string& title){
 		FUN();
+		_db.setTitle(title);
 	}
 
 	/**
@@ -70,24 +83,27 @@ public:
 	 */
 	std::string					getTitle(){
 		FUN();
+		return _db.getTitle();
 	}
 
 	/**
 	 * @brief	Appends the contents of the supplied database to this
 	 * @param	db				The db to append the contents of
 	 */
-	void						append(NamesDBT& db){
+	void						append(NamesDB<T>& db){
 		FUN();
+		_db.append(db._db);
 	}
 
 	/**
 	 * @brief	Gets the entry with the specified id of this database (is really slow, read note)
 	 * @param	id				The id to search (received from add())
-	 * @return	void*			The entry previously supplied to add(), nullptr if out of range
+	 * @return	T*				The entry previously supplied to add(), nullptr if out of range
 	 * @note	This function is slow, it iterates over every entry, don't use it if not necessary
 	 */
-	uint64_t					getEntry(size_t id){
+	T*							getEntry(size_t id){
 		FUN();
+		return _db.getEntry(id);
 	}
 
 	/**
@@ -97,6 +113,8 @@ public:
 	 */
 	entry_namesDB*				getDBEntry(size_t id){
 		FUN();
+		return nullptr;
+		#warning removed
 	}
 
 	/**
@@ -107,6 +125,7 @@ public:
 	 */
 	std::string					getName(size_t id){
 		FUN();
+		return _db.getName(id);
 	}
 
 	/**
@@ -116,6 +135,8 @@ public:
 	 */
 	static std::string			getEntryName(entry_namesDB* entry){
 		FUN();
+		#warning remove
+		return "";
 	}
 
 	/**
@@ -126,8 +147,9 @@ public:
 	 * @param	endID			The id to stop searching at (inclusive)
 	 * @return	namesDB_searchRes	The search result
 	 */
-	namesDB_searchRes			searchFirst(std::string name, bool exact, size_t startID = 0, size_t endID = SIZE_MAX){
+	namesDB_searchRes<T>		searchFirst(std::string name, bool exact, size_t startID = 0, size_t endID = SIZE_MAX){
 		FUN();
+		return toSearchRes(_db.searchFirst(name, exact, startID, endID));
 	}
 
 	/**
@@ -139,20 +161,26 @@ public:
 	 * @param	endID			The id to stop searching at (inclusive)
 	 * @return	namesDB_searchRes	The search result
 	 */
-	namesDB_searchRes			searchFirst(const char* name, size_t nameLen, bool exact, size_t startID = 0, size_t endID = SIZE_MAX);{
+	namesDB_searchRes<T>			searchFirst(const char* name, size_t nameLen, bool exact, size_t startID = 0, size_t endID = SIZE_MAX){
 		FUN();
+		return toSearchRes(_db.searchFirst(name, exact, startID, endID));
 	}
 
 	/**
 	 * @brief	Searches all occurences of the specified name
 	 * @param	name			The name to search for
 	 * @param	exact			If the string has to match exacltly or if it can be a substring
-	 * @param	start_id		The id to start searching from
-	 * @param	end_id			The id to stop searching at (inclusive)
+	 * @param	startID			The id to start searching from
+	 * @param	endID			The id to stop searching at (inclusive)
 	 * @return	A deque holding instances of namesDB_searchRes
 	 */
-	std::deque<namesDB_searchRes>	searchAll(std::string name, bool exact, size_t start_id = 0, size_t end_id = SIZE_MAX){
+	std::deque<namesDB_searchRes<T>> searchAll(std::string name, bool exact, size_t startID = 0, size_t endID = SIZE_MAX){
 		FUN();
+		auto resT = _db.searchAll(name, exact, startID, endID);
+		std::deque<namesDB_searchRes<T>> res;
+		for (auto entry : resT)
+			res.push_back(toSearchRes(entry));
+		return res;
 	}
 
 	/**
@@ -160,6 +188,7 @@ public:
 	 */
 	size_t						getEntriesCount(){
 		FUN();
+		return _db.getEntriesCount();
 	}
 
 	/**
@@ -167,6 +196,7 @@ public:
 	 */
 	size_t						getBytesUsed(){
 		FUN();
+		return _db.getBytesUsed();
 	}
 
 	/**
@@ -175,6 +205,7 @@ public:
 	 */
 	void						exportDB(std::ostream& outStream){
 		FUN();
+		_db.exportDB(outStream);
 	}
 
 	/**
@@ -184,6 +215,7 @@ public:
 	 */
 	bool						importDB(std::istream& inStream){
 		FUN();
+		return _db.importDB(inStream);
 	}
 
 	/**
@@ -192,6 +224,7 @@ public:
 	 */
 	void						updateIndex(){
 		FUN();
+		_db.updateIndex();
 	}
 
 #ifndef FRIEND_NAMES_DB
@@ -199,6 +232,15 @@ private:
 #endif
 
 	NamesDBT					_db;
+
+	namesDB_searchRes<T>		toSearchRes(namesDBt_searchRes& resT){
+		namesDB_searchRes<T> res;
+		res.code = resT.code;
+		res.matchStart = resT.matchStart;
+		res.matchRemaining = resT.matchRemaining;
+		res.data = (T*)resT.data;
+		res.id = resT.id;
+	}
 
 };
 

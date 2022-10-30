@@ -5,13 +5,13 @@
 
 #include <cstring>
 
-namesDB_searchRes NamesDBT::searchFirst(std::string search, bool exact, size_t search_start, size_t search_end){
+namesDBt_searchRes NamesDBT::searchFirst(std::string search, bool exact, size_t search_start, size_t search_end){
 	FUN();
 	
 	return searchFirst(search.c_str(), search.length(), exact, search_start, search_end);
 }
 
-namesDB_searchRes NamesDBT::searchFirst(const char* search, size_t search_len, bool exact, size_t startID, size_t endID){
+namesDBt_searchRes NamesDBT::searchFirst(const char* search, size_t search_len, bool exact, size_t startID, size_t endID){
 	FUN();
 	DEBUG_EX("NamesDB::searchFirst()");
 
@@ -25,12 +25,12 @@ namesDB_searchRes NamesDBT::searchFirst(const char* search, size_t search_len, b
 	entry_namesDB* curEntry = getDBEntry(startID);
 
 	if (curEntry == nullptr){
-		namesDB_searchRes res;
+		namesDBt_searchRes res;
 		res.code = SEARCHRES_INVALIDARG;
 		return res;
 	}
 
-	namesDB_searchRes res;
+	namesDBt_searchRes res;
 	res.code = SEARCHRES_NOTFOUND;
 
 	size_t matching_chars = 0;

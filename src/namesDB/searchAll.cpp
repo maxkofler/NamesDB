@@ -5,7 +5,7 @@
 
 #include <future>
 
-std::deque<namesDB_searchRes> NamesDBT::searchAll(std::string search, bool exact, size_t startID, size_t endID){
+std::deque<namesDBt_searchRes> NamesDBT::searchAll(std::string search, bool exact, size_t startID, size_t endID){
 	FUN();
 	DEBUG_EX("NamesDB::searchAll()");
 
@@ -14,7 +14,7 @@ std::deque<namesDB_searchRes> NamesDBT::searchAll(std::string search, bool exact
 		real_end = _count_entries;
 
 	size_t jobsPerThread = (real_end - startID) / _threads_available;
-	std::deque<std::future<std::deque<namesDB_searchRes>>> futures;
+	std::deque<std::future<std::deque<namesDBt_searchRes>>> futures;
 
 	size_t thread_startID;
 	size_t usable_threads = _threads_available;
@@ -33,12 +33,12 @@ std::deque<namesDB_searchRes> NamesDBT::searchAll(std::string search, bool exact
 	futures.push_back(std::async(&NamesDBT::searchAllST, this, search, exact, thread_startID, SIZE_MAX));
 
 	//Wait for all results to come in
-	std::deque<namesDB_searchRes> res;
+	std::deque<namesDBt_searchRes> res;
 	size_t futuresSize = futures.size();
 
 	for (size_t i = 0; i < futuresSize; i++){
 		//LOGU("Thread " + std::to_string(i) + " joined!");
-		for (namesDB_searchRes n : futures.at(i).get())
+		for (namesDBt_searchRes n : futures.at(i).get())
 			res.push_back(n);
 	}
 	
@@ -46,18 +46,18 @@ std::deque<namesDB_searchRes> NamesDBT::searchAll(std::string search, bool exact
 	return res;
 }
 
-std::deque<namesDB_searchRes> NamesDBT::searchAllST(std::string search, bool exact, size_t startID, size_t endID){
+std::deque<namesDBt_searchRes> NamesDBT::searchAllST(std::string search, bool exact, size_t startID, size_t endID){
 	FUN();
 	DEBUG_EX("NamesDB::searchAllST()");
 
 	LOGMEM("[NamesDB][searchAll] Searching for all occurences of  \"" + search + "\" from position " + std::to_string(startID) + "...");
 
-	std::deque<namesDB_searchRes> res;
+	std::deque<namesDBt_searchRes> res;
 
 	const char* search_cStr = search.c_str();
 	size_t search_len = search.length();
 
-	namesDB_searchRes searchRes;
+	namesDBt_searchRes searchRes;
 	size_t curStartID = startID;
 
 	for (curStartID = startID; curStartID <= endID; curStartID++){
