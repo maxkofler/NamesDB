@@ -4,7 +4,7 @@
 #define FRIEND_NAMES_DB_T
 #include "namesDBt.h"
 
-#include "dArray.h"
+#include <vector>
 
 template<typename T>
 struct namesDB_searchRes{
@@ -66,10 +66,22 @@ public:
 	 * @param	entry			The entry to register
 	 * @return	size_t			The id of the name
 	 */
-	size_t						add(const std::string& str, T entry){
+	size_t						add(const std::string& str, const T& entry){
 		FUN();
-		_entries.add(entry);
-		return _db.add(str, (uint64_t) _entries.lastID());
+		_entries.push_back(entry);
+		return _db.add(str, (uint64_t) _entries.size()-1);
+	}
+
+	/**
+	 * @brief	Adds the supplied string to the database
+	 * @param	str				The string to add
+	 * @param	entry			The entry to register
+	 * @return	size_t			The id of the name
+	 */
+	size_t						add(const std::string& str, T&& entry){
+		FUN();
+		_entries.push_back(entry);
+		return _db.add(str, (uint64_t) _entries.size()-1);
 	}
 
 	/**
@@ -96,7 +108,7 @@ public:
 	void						append(NamesDB<T>& db){
 		FUN();
 		_db.append(db._db);
-		_entries.append(db._entries);
+		_entries.insert(_entries.end(), db._entries.begin(), db._entries.end());
 	}
 
 	/**
@@ -107,11 +119,11 @@ public:
 	 */
 	T*							getEntry(size_t id){
 		FUN();
-		if (id > _entries.lastID()){
+		if (id > _entries.size()-1){
 			LOGUE("[NamesDB][getEntry] Index " + std::to_string(id) + " is out of bounds!");
 			return nullptr;
 		}
-		return &_entries._data[id];
+		return &_entries[id];
 	}
 
 	/**
@@ -232,14 +244,14 @@ private:
 
 	NamesDBT					_db;
 
-	DArray<T>					_entries;
+	std::vector<T>				_entries;
 
 	namesDB_searchRes<T>		toSearchRes(const namesDBt_searchRes& resT){
 		namesDB_searchRes<T> res {
 			resT.code,
 			resT.matchStart,
 			resT.matchRemaining,
-			resT.code == 0 ? &_entries._data[resT.data] : nullptr,
+			resT.code == 0 ? &_entries[resT.data] : nullptr,
 			resT.id
 		};
 		return res;
