@@ -5,14 +5,17 @@
 TEST(NamesDB, export){
 	FUN();
 
+	#warning TODO: Check import correctness
+
 	std::string testString = "Test";
+	std::string nullString = "null";
 
 	NamesDB<std::string> db;
-	db.add("db", &testString);
-	db.add("nullptr", nullptr);
+	db.add("db", testString);
+	db.add("nullString", nullString);
 
 	std::ofstream outFile;
-	db.add("äueräerüafö!ßdftestString", &testString);
+	db.add("äueräerüafö!ßdftestString", testString);
 	outFile.open("db.bin", std::ios::binary | std::ios::out);
 
 	db.exportDB(outFile);

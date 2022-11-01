@@ -9,7 +9,7 @@ TEST(NamesDB, getName_debug){
 		DEBUG_FAIL_FUN(funName);
 
 		NamesDB<int> db;
-		db.getName(db.add("NewEntry", nullptr));
+		db.getName(db.add("NewEntry", 0));
 
 		F_NOTHROW(funName + " - debug");
 	} catch (DebugException* e){
@@ -31,7 +31,7 @@ TEST(NamesDB, getName_id_out_of_range){
 	EXPECT_TRUE(db.getName(1).empty());
 	EXPECT_TRUE(db.getName(9281456).empty());
 
-	db.add("Name", nullptr);
+	db.add("Name", 0);
 
 	EXPECT_FALSE(db.getName(0).empty());
 	EXPECT_TRUE(db.getName(1).empty());
@@ -45,8 +45,8 @@ TEST(NamesDB, getName_correct_return){
 
 	NamesDB<std::string> db;
 
-	size_t id = db.add(name, &name);
-	size_t id2 = db.add(name2, &name2);
+	size_t id = db.add(name, name);
+	size_t id2 = db.add(name2, name2);
 
 	EXPECT_EQ(name, db.getName(id));
 	EXPECT_EQ(name2, db.getName(id2));

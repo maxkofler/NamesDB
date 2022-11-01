@@ -17,9 +17,9 @@ TEST(NamesDB_Stress, searchAll_loads_of_names){
 	hlog->setLevel(Log::U);
 	for (size_t n = 0; n < num; n++){
 		for (size_t i = 0; i < 1000; i++){
-			db.add("Entry" + std::to_string(i), &name);
+			db.add("Entry" + std::to_string(i), name);
 		}
-		db.add(finalName, &finalName);
+		db.add(finalName, finalName);
 	}
 	hlog->setLevel(oldLevel);
 

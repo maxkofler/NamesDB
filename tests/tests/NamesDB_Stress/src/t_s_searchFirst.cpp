@@ -10,13 +10,13 @@ TEST(NamesDB_Stress, searchFirst_loads_of_names){
 	NamesDB<std::string> db;
 
 	for (size_t i = 0; i < 500; i++){
-		db.add("Entry" + std::to_string(i), &name);
+		db.add("Entry" + std::to_string(i), name);
 	}
 
-	db.add(finalName, &finalName);
+	db.add(finalName, finalName);
 
 	namesDB_searchRes res = db.searchFirst(finalName, false);
 
 	ASSERT_EQ(0, res.code) << "Could not find the required string";
-	EXPECT_EQ(&finalName, res.data) << "Found the wrong entry";
+	EXPECT_EQ(finalName, *res.data) << "Found the wrong entry";
 }

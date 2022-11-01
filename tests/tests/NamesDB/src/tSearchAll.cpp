@@ -9,7 +9,7 @@ TEST(NamesDB, searchAll_debug){
 		DEBUG_FAIL_FUN(funName);
 
 		NamesDB<int> db;
-		db.add("NewEntry", nullptr);
+		db.add("NewEntry", 0);
 
 		db.searchAll("Entry", false);
 
@@ -32,8 +32,8 @@ TEST(NamesDB, searchAll_bounds){
 
 	NamesDB<std::string> db;
 	db._db._threads_available = 1;
-	db.add("newEntry", &str1);
-	db.add("newSecondEntry", &str2);
+	db.add("newEntry", str1);
+	db.add("newSecondEntry", str2);
 
 	auto res = db.searchAll("new", false, 0, 0);
 	ASSERT_EQ(1, res.size()) << "Found wrong count of entries";

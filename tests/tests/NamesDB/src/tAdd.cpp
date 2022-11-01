@@ -9,7 +9,7 @@ TEST(NamesDB, add_debug){
 		DEBUG_FAIL_FUN(funName);
 
 		NamesDB<int> db;
-		db.add("NewEntry", nullptr);
+		db.add("NewEntry", 0);
 
 		F_NOTHROW(funName + " - debug");
 	} catch (DebugException* e){
@@ -28,7 +28,7 @@ TEST(NamesDB, add_normal){
 	int testInt = 0;
 
 	NamesDB<int> db;
-	db.add("MyName", &testInt);
+	db.add("MyName", testInt);
 }
 
 //Checks if the return value of add() is the correct id
@@ -36,8 +36,8 @@ TEST(NamesDB, add_return){
 	FUN();
 
 	NamesDB<int> db;
-	ASSERT_EQ(0, db.add("OneName", nullptr));
-	ASSERT_EQ(1, db.add("SecondName", nullptr));
+	ASSERT_EQ(0, db.add("OneName", 0));
+	ASSERT_EQ(1, db.add("SecondName", 0));
 }
 
 //Checks if the calling of add() expands the database
@@ -50,7 +50,7 @@ TEST(NamesDB, add_expand){
 		DEBUG_FAIL_FUN(funName);
 
 		NamesDB<int> db("Untitled", 1);
-		db.add("Name", nullptr);
+		db.add("Name", 0);
 
 		FAIL() << "NamesDB::add() does not call expand to extend its database";
 	} catch (DebugException* e){

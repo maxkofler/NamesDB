@@ -8,7 +8,7 @@ TEST(NamesDB_Stress, add_loads_of_names){
 
 	try{
 		for(size_t i = 0; i < 100000; i++)
-			db.add("Name" + std::to_string(i), nullptr);
+			db.add("Name" + std::to_string(i), 0);
 
 		db.updateIndex();
 		ASSERT_EQ(db._db._count_entries, db._db._size_index_entries) << "Index does not contain equal amount of entries!";

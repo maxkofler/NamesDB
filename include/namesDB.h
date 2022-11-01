@@ -4,6 +4,8 @@
 #define FRIEND_NAMES_DB_T
 #include "namesDBt.h"
 
+#include "dArray.h"
+
 template<typename T>
 struct namesDB_searchRes{
 	int8_t						code = 0;
@@ -64,9 +66,10 @@ public:
 	 * @param	entry			The entry to register
 	 * @return	size_t			The id of the name
 	 */
-	size_t						add(const std::string& str, T* entry){
+	size_t						add(const std::string& str, T entry){
 		FUN();
-		return _db.add(str, (uint64_t) entry);
+		_entries.add(entry);
+		return _db.add(str, (uint64_t) _entries.lastID());
 	}
 
 	/**
@@ -93,6 +96,7 @@ public:
 	void						append(NamesDB<T>& db){
 		FUN();
 		_db.append(db._db);
+		_entries.append(db._entries);
 	}
 
 	/**
@@ -103,7 +107,11 @@ public:
 	 */
 	T*							getEntry(size_t id){
 		FUN();
-		return (T*)_db.getEntry(id);
+		if (id > _entries.lastID()){
+			LOGUE("[NamesDB][getEntry] Index " + std::to_string(id) + " is out of bounds!");
+			return nullptr;
+		}
+		return &_entries._data[id];
 	}
 
 	/**
@@ -224,14 +232,23 @@ private:
 
 	NamesDBT					_db;
 
+	DArray<T>					_entries;
+
 	namesDB_searchRes<T>		toSearchRes(const namesDBt_searchRes& resT){
-		namesDB_searchRes<T> res;
-		res.code = resT.code;
+		namesDB_searchRes<T> res {
+			resT.code,
+			resT.matchStart,
+			resT.matchRemaining,
+			resT.code == 0 ? &_entries._data[resT.data] : nullptr,
+			resT.id
+		};
+		return res;
+		/*res.code = resT.code;
 		res.matchStart = resT.matchStart;
 		res.matchRemaining = resT.matchRemaining;
-		res.data = (T*)resT.data;
+		res.data = _entries._data[resT.data];
 		res.id = resT.id;
-		return res;
+		return res;*/
 	}
 
 };
