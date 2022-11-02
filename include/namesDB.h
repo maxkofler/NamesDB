@@ -26,10 +26,14 @@ public:
 	 */
 	NamesDB(const std::string& title = "Untitled", size_t blockSize = 1024)
 		: _db(title, blockSize){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 	}
 	~NamesDB(){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 	}
 
 	/**
@@ -38,7 +42,9 @@ public:
 	 */
 	NamesDB(const NamesDB<T>& other)
 		: _db(other._db){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 	}
 	
 	/**
@@ -48,7 +54,9 @@ public:
 	 * 			Typically this happens when the system is out of memory
 	 */
 	bool						expand(uint8_t count = 1){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 		return _db.expand(count);
 	}
 
@@ -56,7 +64,9 @@ public:
 	 * @brief	Cleans the whole database, including every allocated object
 	 */
 	void						clean(){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 		_db.clean();
 	}
 
@@ -67,7 +77,9 @@ public:
 	 * @return	size_t			The id of the name
 	 */
 	size_t						add(const std::string& str, const T& entry){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 		_entries.push_back(entry);
 		return _db.add(str, (uint64_t) _entries.size()-1);
 	}
@@ -79,7 +91,9 @@ public:
 	 * @return	size_t			The id of the name
 	 */
 	size_t						add(const std::string& str, T&& entry){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 		_entries.push_back(entry);
 		return _db.add(str, (uint64_t) _entries.size()-1);
 	}
@@ -89,7 +103,9 @@ public:
 	 * @param	title			The new title of the database
 	 */
 	void						setTitle(const std::string& title){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 		_db.setTitle(title);
 	}
 
@@ -97,7 +113,9 @@ public:
 	 * @brief	Returns the title of the database
 	 */
 	std::string					getTitle(){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 		return _db.getTitle();
 	}
 
@@ -106,7 +124,9 @@ public:
 	 * @param	db				The db to append the contents of
 	 */
 	void						append(NamesDB<T>& db){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 		_db.append(db._db);
 		_entries.insert(_entries.end(), db._entries.begin(), db._entries.end());
 	}
@@ -118,14 +138,17 @@ public:
 	 * @note	This function is slow, it iterates over every entry, don't use it if not necessary
 	 */
 	T*							getEntry(size_t id){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 		#ifdef DEBUG_EX
 			DEBUG_EX("NamesDB::getEntry()");
 		#endif
 		
-		LOGU("???");
 		if (id >= _entries.size()){
-			LOGUE("[NamesDB][getEntry] Index " + std::to_string(id) + " is out of bounds!");
+			#ifdef LOGUE
+				LOGUE("[NamesDB][getEntry] Index " + std::to_string(id) + " is out of bounds!");
+			#endif
 			return nullptr;
 		}
 		return &_entries[id];
@@ -138,7 +161,9 @@ public:
 	 * @note	This function is slow, it iterates over every entry, don't use it if not necessary
 	 */
 	std::string					getName(size_t id){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 		return _db.getName(id);
 	}
 
@@ -151,7 +176,9 @@ public:
 	 * @return	namesDB_searchRes	The search result
 	 */
 	namesDB_searchRes<T>		searchFirst(std::string name, bool exact, size_t startID = 0, size_t endID = SIZE_MAX){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 		auto resT = _db.searchFirst(name, exact, startID, endID);
 		return toSearchRes(resT);
 	}
@@ -166,7 +193,9 @@ public:
 	 * @return	namesDB_searchRes	The search result
 	 */
 	namesDB_searchRes<T>			searchFirst(const char* name, size_t nameLen, bool exact, size_t startID = 0, size_t endID = SIZE_MAX){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 		auto resT = _db.searchFirst(name, exact, startID, endID);
 		return toSearchRes(resT);
 	}
@@ -180,7 +209,9 @@ public:
 	 * @return	A deque holding instances of namesDB_searchRes
 	 */
 	std::deque<namesDB_searchRes<T>> searchAll(std::string name, bool exact, size_t startID = 0, size_t endID = SIZE_MAX){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 		auto resT = _db.searchAll(name, exact, startID, endID);
 		std::deque<namesDB_searchRes<T>> res;
 		for (auto entry : resT)
@@ -192,7 +223,9 @@ public:
 	 * @brief	Returns the amount of entries stored in this database
 	 */
 	size_t						getEntriesCount(){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 		return _db.getEntriesCount();
 	}
 
@@ -200,7 +233,9 @@ public:
 	 * @brief	Returns the bytes used by this database
 	 */
 	size_t						getBytesUsed(){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 		return _db.getBytesUsed();
 	}
 
@@ -209,7 +244,9 @@ public:
 	 * @param	outStream		The stream to export to
 	 */
 	void						exportDB(std::ostream& outStream){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 		_db.exportDB(outStream);
 		size_t bytesUsed = _entries.size()*sizeof(T);
 		outStream.write((char*)_entries.data(), bytesUsed);
@@ -221,7 +258,9 @@ public:
 	 * @param	inStream		The stream to import from
 	 */
 	bool						importDB(std::istream& instream){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 		_entries.clear();
 
 		bool ok = _db.importDB(instream);
@@ -234,8 +273,10 @@ public:
 
 		instream.read((char*)temp, bytesNeeded);
 		if (!instream){
-			LOGE(	"[NamesDB][importDB] Failed to import stream contents to \"" + 
-					_db._title + "\": EOF in data segment, read bytes: " + std::to_string(instream.gcount()));
+			#ifdef LOGE
+				LOGE(	"[NamesDB][importDB] Failed to import stream contents to \"" + 
+						_db._title + "\": EOF in data segment, read bytes: " + std::to_string(instream.gcount()));
+			#endif
 			clean();
 			return false;
 		}
@@ -252,7 +293,9 @@ public:
 	 * @note	This should be done before using id-based access after creating a new DB or updating it
 	 */
 	void						updateIndex(){
-		FUN();
+		#ifdef FUN
+			FUN();
+		#endif
 		_db.updateIndex();
 	}
 
@@ -273,12 +316,6 @@ private:
 			resT.id
 		};
 		return res;
-		/*res.code = resT.code;
-		res.matchStart = resT.matchStart;
-		res.matchRemaining = resT.matchRemaining;
-		res.data = _entries._data[resT.data];
-		res.id = resT.id;
-		return res;*/
 	}
 
 };
