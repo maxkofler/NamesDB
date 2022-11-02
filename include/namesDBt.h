@@ -9,22 +9,22 @@
 
 #ifdef _WIN32
     #define GNU_ATTRIBUTE_PACKED
-    #define WINDOWS_PACKED_START #pragma pack(push, 1)
-    #define WINDOWS_PACKED_STOP #pragma pack(pop)
 #else
     #define GNU_ATTRIBUTE_PACKED __attribute__((packed))
-    #define WINDOWS_PACKED_START
-    #define WINDOWS_PACKED_STOP
 #endif
 
-WINDOWS_PACKED_START
+#ifdef _WIN32
+	#pragma pack(push, 1)
+#endif
 
 struct entry_namesDB{
 	uint64_t					data;
 	uint8_t						nameLen;
 } GNU_ATTRIBUTE_PACKED;
 
-WINDOWS_PACKED_STOP
+#ifdef _WIN32
+	#pragma pack(pop)
+#endif
 
 #define SEARCHRES_NOTFOUND -1
 #define SEARCHRES_INVALIDARG -2
