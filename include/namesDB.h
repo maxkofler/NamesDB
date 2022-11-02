@@ -119,7 +119,9 @@ public:
 	 */
 	T*							getEntry(size_t id){
 		FUN();
-		DEBUG_EX("NamesDB::getEntry()");
+		#ifdef DEBUG_EX
+			DEBUG_EX("NamesDB::getEntry()");
+		#endif
 		
 		LOGU("???");
 		if (id >= _entries.size()){
