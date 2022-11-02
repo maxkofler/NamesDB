@@ -217,6 +217,8 @@ public:
 	void						exportDB(std::ostream& outStream){
 		FUN();
 		_db.exportDB(outStream);
+		size_t bytesUsed = _entries.size()*sizeof(T);
+		outStream.write((char*)_entries.data(), bytesUsed);
 	}
 
 	/**
@@ -224,9 +226,31 @@ public:
 	 * @note	This clears the contents of this database
 	 * @param	inStream		The stream to import from
 	 */
-	bool						importDB(std::istream& inStream){
+	bool						importDB(std::istream& instream){
 		FUN();
-		return _db.importDB(inStream);
+		_entries.clear();
+
+		bool ok = _db.importDB(instream);
+		if (!ok)
+			return ok;
+
+		size_t bytesNeeded = _db._count_entries*sizeof(T);
+
+		T* temp = new T[_db._count_entries];
+
+		instream.read((char*)temp, bytesNeeded);
+		if (!instream){
+			LOGE(	"[NamesDB][importDB] Failed to import stream contents to \"" + 
+					_db._title + "\": EOF in data segment, read bytes: " + std::to_string(instream.gcount()));
+			clean();
+			return false;
+		}
+
+		for (size_t i = 0; i < _db._count_entries; i++)
+			_entries.push_back(temp[i]);
+		
+		delete[] temp;
+		return true;
 	}
 
 	/**
