@@ -5,8 +5,6 @@
 TEST(NamesDB, export){
 	FUN();
 
-	#warning TODO: Check import correctness
-
 	std::string testString = "Test";
 	std::string nullString = "null";
 
@@ -32,4 +30,7 @@ TEST(NamesDB, export){
 	inFile.clear();
 
 	ASSERT_TRUE(newDB.importDB(inFile));
+
+	ASSERT_EQ(testString, *newDB.getEntry(0)) << "Import and export did not work (Changed values)";
+	ASSERT_EQ(nullString, *newDB.getEntry(1)) << "Import and export did not work (Changed values)";
 }

@@ -47,8 +47,8 @@ TEST(NamesDB, getEntry_correct_return){
 	size_t id = db.add(name, name);
 	size_t id2 = db.add(name2, name2);
 
-	EXPECT_EQ(&name, db.getEntry(id));
-	EXPECT_EQ(&name2, db.getEntry(id2));
+	EXPECT_EQ(name, *db.getEntry(id));
+	EXPECT_EQ(name2, *db.getEntry(id2));
 }
 
 TEST(NamesDB, getEntry_empty){

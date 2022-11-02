@@ -119,23 +119,15 @@ public:
 	 */
 	T*							getEntry(size_t id){
 		FUN();
-		if (id > _entries.size()-1){
+		DEBUG_EX("NamesDB::getEntry()");
+		
+		LOGU("???");
+		if (id >= _entries.size()){
 			LOGUE("[NamesDB][getEntry] Index " + std::to_string(id) + " is out of bounds!");
 			return nullptr;
 		}
 		return &_entries[id];
 	}
-
-	/**
-	 * @brief	Searches for the database entry with the supplied id and returns a pointer to it
-	 * @param	id				The id of the searched entry
-	 * @return	entry_namesDB*	A pointer to the db entry
-	 */
-	/*entry_namesDB*				getDBEntry(size_t id){
-		FUN();
-		return nullptr;
-		#warning removed
-	}*/
 
 	/**
 	 * @brief	Gets the name string of the specified id (is really slow, read note)

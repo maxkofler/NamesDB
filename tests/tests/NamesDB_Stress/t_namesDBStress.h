@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "log.h"
+#include "debug.h"
 
 #define FRIEND_NAMES_DB
 

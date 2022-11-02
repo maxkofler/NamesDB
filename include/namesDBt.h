@@ -29,6 +29,8 @@ struct entry_namesDB{
 #define SEARCHRES_NOTFOUND -1
 #define SEARCHRES_INVALIDARG -2
 
+#define NAMESDB_OUT_OF_BOUNDS UINT64_MAX
+
 struct namesDBt_searchRes{
 	int8_t						code = 0;
 	uint8_t						matchStart = 0;		//The place the match starts in the results name
@@ -95,10 +97,9 @@ public:
 	void						append(NamesDBT& db);
 
 	/**
-	 * @brief	Gets the entry with the specified id of this database (is really slow, read note)
+	 * @brief	Gets the entry with the specified id of this database (Can be slow if updateIndex() is omitted)
 	 * @param	id				The id to search (received from add())
-	 * @return	void*			The entry previously supplied to add(), nullptr if out of range
-	 * @note	This function is slow, it iterates over every entry, don't use it if not necessary
+	 * @return	uint64_t		The entry stored in the database, NAMESDB_OUT_OF_BOUNDS if out of bounds
 	 */
 	uint64_t					getEntry(size_t id);
 

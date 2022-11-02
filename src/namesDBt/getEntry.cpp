@@ -9,9 +9,8 @@ uint64_t NamesDBT::getEntry(size_t id){
 
 	entry_namesDB* curEntry = getDBEntry(id);
 
-	#warning Check this return value
 	if (curEntry == nullptr)
-		return 0;
+		return NAMESDB_OUT_OF_BOUNDS;
 	else
 		return curEntry->data;
 }
