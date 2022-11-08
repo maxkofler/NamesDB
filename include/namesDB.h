@@ -281,9 +281,11 @@ public:
 			return false;
 		}
 
+		_entries.reserve(_db._count_entries);
 		for (size_t i = 0; i < _db._count_entries; i++)
 			_entries.push_back(temp[i]);
-		
+		_entries.shrink_to_fit();
+
 		delete[] temp;
 		return true;
 	}
