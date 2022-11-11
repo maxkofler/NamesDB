@@ -263,6 +263,7 @@ public:
 		#endif
 		_entries.clear();
 
+		_entries.reserve(_db._count_entries);
 		bool ok = _db.importDB(instream);
 		if (!ok)
 			return ok;
