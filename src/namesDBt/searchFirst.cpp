@@ -11,9 +11,20 @@ namesDBt_searchRes NamesDBT::searchFirst(std::string search, bool exact, bool ma
 	return searchFirst(search.c_str(), search.length(), exact, matchCase, search_start, search_end);
 }
 
-namesDBt_searchRes NamesDBT::searchFirst(const char* search, size_t search_len, bool exact, bool matchCase, uint64_t startID, uint64_t endID){
+namesDBt_searchRes NamesDBT::searchFirst(const char* searchOrig, size_t searchOrig_len, bool exact, bool matchCase, uint64_t startID, uint64_t endID){
 	FUN();
 	DEBUG_EX("NamesDB::searchFirst()");
+
+	char* search = new char[searchOrig_len];
+	size_t search_len = searchOrig_len;
+
+	//If matchCase is turned off, put every character in the searched string to lowercase
+	if (matchCase){
+		std::strcpy(search, searchOrig);
+	} else {
+		for(size_t i = 0; i < search_len; i++)
+			search[i] = std::tolower(searchOrig[i]);
+	}
 
 	//Plot some information about the operation
 	if (endID != SIZE_MAX)
@@ -31,6 +42,7 @@ namesDBt_searchRes NamesDBT::searchFirst(const char* search, size_t search_len, 
 	//Check the entry for existance
 	if (curEntry == nullptr){
 		res.code = SEARCHRES_INVALIDARG;
+		delete[] search;
 		return res;
 	}
 
@@ -55,10 +67,18 @@ namesDBt_searchRes NamesDBT::searchFirst(const char* search, size_t search_len, 
 		//Iterate over every character in the name and check if it is matching, else skip it
 		matching_chars = name_pos = 0;
 		for (name_pos = 0; name_pos < curEntry->nameLen && matching_chars < search_len; name_pos++){
-			if (search[matching_chars] == name_curEntry[name_pos])
-				matching_chars++;
-			else 
-				matching_chars = 0;
+			//If matchCase is turned off, change the character to lowercase first
+			if (matchCase){
+				if (search[matching_chars] == name_curEntry[name_pos])
+					matching_chars++;
+				else 
+					matching_chars = 0;
+			} else {
+				if (search[matching_chars] == std::tolower(name_curEntry[name_pos]))
+					matching_chars++;
+				else 
+					matching_chars = 0;
+			}	
 		}
 
 		//If debugging is enabled, print a message
@@ -85,5 +105,6 @@ namesDBt_searchRes NamesDBT::searchFirst(const char* search, size_t search_len, 
 	if (res.code == SEARCHRES_NOTFOUND)
 		LOGMEM("[NamesDB][searchFirst] Could not find name \"" + std::string(search) + "\" in database \"" + _title + "\"");
 
+	delete[] search;
 	return res;
 }
