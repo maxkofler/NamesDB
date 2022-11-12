@@ -5,7 +5,8 @@
 
 #include <future>
 
-std::deque<namesDBt_searchRes> NamesDBT::searchAll(std::string search, bool exact, size_t startID, size_t endID){
+//TODO: Watch over for uint64_t and optimizations
+std::deque<namesDBt_searchRes> NamesDBT::searchAll(std::string search, bool exact, bool matchCase, uint64_t startID, uint64_t endID){
 	FUN();
 	DEBUG_EX("NamesDB::searchAll()");
 
@@ -25,12 +26,12 @@ std::deque<namesDBt_searchRes> NamesDBT::searchAll(std::string search, bool exac
 
 	for (size_t i = 0; i < usable_threads-1; i++){
 		thread_startID = startID + (jobsPerThread*i);
-		futures.push_back(std::async(&NamesDBT::searchAllST, this, search, exact, thread_startID, thread_startID+jobsPerThread-1));
+		futures.push_back(std::async(&NamesDBT::searchAllST, this, search, exact, matchCase, thread_startID, thread_startID+jobsPerThread-1));
 	}
 
 	//Handle the last job separately
 	thread_startID = startID + (jobsPerThread * (_threads_available-1));
-	futures.push_back(std::async(&NamesDBT::searchAllST, this, search, exact, thread_startID, SIZE_MAX));
+	futures.push_back(std::async(&NamesDBT::searchAllST, this, search, exact, matchCase, thread_startID, SIZE_MAX));
 
 	//Wait for all results to come in
 	std::deque<namesDBt_searchRes> res;
@@ -46,7 +47,7 @@ std::deque<namesDBt_searchRes> NamesDBT::searchAll(std::string search, bool exac
 	return res;
 }
 
-std::deque<namesDBt_searchRes> NamesDBT::searchAllST(std::string search, bool exact, size_t startID, size_t endID){
+std::deque<namesDBt_searchRes> NamesDBT::searchAllST(std::string search, bool exact, bool matchCase, uint64_t startID, uint64_t endID){
 	FUN();
 	DEBUG_EX("NamesDB::searchAllST()");
 
@@ -56,12 +57,12 @@ std::deque<namesDBt_searchRes> NamesDBT::searchAllST(std::string search, bool ex
 
 	const char* search_cStr = search.c_str();
 	size_t search_len = search.length();
-
 	namesDBt_searchRes searchRes;
+
 	size_t curStartID = startID;
 
 	for (curStartID = startID; curStartID <= endID; curStartID++){
-		searchRes = searchFirst(search_cStr, search_len, exact, curStartID, endID);
+		searchRes = searchFirst(search_cStr, search_len, exact, matchCase, curStartID, endID);
 
 		if (searchRes.code == SEARCHRES_NOTFOUND || searchRes.code == SEARCHRES_INVALIDARG){
 			//The end of the search has been reached

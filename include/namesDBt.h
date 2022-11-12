@@ -129,32 +129,35 @@ public:
 	 * @brief	Searches for the first occurrence of the specified name
 	 * @param	name			The name to search for
 	 * @param	exact			If the string has to match exactly or if it can be a substring
+	 * @param	matchCase		Check for equality on cases
 	 * @param	startID			The id to start searching from
 	 * @param	endID			The id to stop searching at (inclusive)
 	 * @return	namesDB_searchRes	The search result
 	 */
-	namesDBt_searchRes			searchFirst(std::string name, bool exact, size_t startID = 0, size_t endID = SIZE_MAX);
+	namesDBt_searchRes			searchFirst(std::string name, bool exact, bool matchCase, uint64_t startID = 0, uint64_t endID = SIZE_MAX);
 
 	/**
 	 * @brief	Searches for the first occurence of the specified name
 	 * @param	name			The name to search for
 	 * @param	nameLen			The length of the name
 	 * @param	exact			If the string has to match exactly or if it can be a substring
+	 * @param	matchCase		Check for equality on cases
 	 * @param	startID			The id to start searching from
 	 * @param	endID			The id to stop searching at (inclusive)
 	 * @return	namesDB_searchRes	The search result
 	 */
-	namesDBt_searchRes			searchFirst(const char* name, size_t nameLen, bool exact, size_t startID = 0, size_t endID = SIZE_MAX);
+	namesDBt_searchRes			searchFirst(const char* name, size_t nameLen, bool exact, bool matchCase, uint64_t startID = 0, uint64_t endID = SIZE_MAX);
 
 	/**
 	 * @brief	Searches all occurences of the specified name
 	 * @param	name			The name to search for
 	 * @param	exact			If the string has to match exacltly or if it can be a substring
+	 * @param	matchCase		Check for equality on cases
 	 * @param	start_id		The id to start searching from
 	 * @param	end_id			The id to stop searching at (inclusive)
 	 * @return	A deque holding instances of namesDB_searchRes
 	 */
-	std::deque<namesDBt_searchRes>	searchAll(std::string name, bool exact, size_t start_id = 0, size_t end_id = SIZE_MAX);
+	std::deque<namesDBt_searchRes>	searchAll(std::string name, bool exact, bool matchCase, uint64_t start_id = 0, uint64_t end_id = SIZE_MAX);
 
 	/**
 	 * @brief	Returns the amount of entries stored in this database
@@ -258,11 +261,12 @@ private:
 	 * @brief	Searches all occurences of the specified name in a single thread
 	 * @param	name			The name to search for
 	 * @param	exact			If the string has to match exacltly or if it can be a substring
+	 * @param	matchCase		Check for equality on cases
 	 * @param	start_id		The id to start searching from
 	 * @param	end_id			The id to stop searching at (inclusive)
 	 * @return	A deque holding instances of namesDB_searchRes
 	 */
-	std::deque<namesDBt_searchRes>	searchAllST(std::string name, bool exact, size_t start_id = 0, size_t end_id = SIZE_MAX);
+	std::deque<namesDBt_searchRes>	searchAllST(std::string name, bool exact, bool matchCase, uint64_t start_id = 0, uint64_t end_id = SIZE_MAX);
 
 };
 
