@@ -198,7 +198,7 @@ public:
 		#ifdef FUN
 			FUN();
 		#endif
-		auto resT = _db.searchFirst(name, exact, matchCase, startID, endID);
+		auto resT = _db.searchFirst(name, nameLen, exact, matchCase, startID, endID);
 		return toSearchRes(resT);
 	}
 
