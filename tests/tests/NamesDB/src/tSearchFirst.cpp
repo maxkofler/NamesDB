@@ -147,5 +147,19 @@ TEST(NamesDB, searchFirst_find_from_start_index){
 		ASSERT_EQ(0, res.code) << "Database search failed";
 		ASSERT_EQ(searchedString, *res.data) << "searchFirst() could not find the second occurence";
 	}
+}
 
+//Checks if searchFirsts "matchCase" argument works
+TEST(NamesDB, searchFirst_differCase){
+	FUN();
+
+	std::string dbString = "RanDomCaseString";
+	std::string searchedString = "rAndOmcaSEstRIng";
+
+	NamesDB<std::string> db;
+	db.add(dbString, dbString);
+
+	namesDB_searchRes<std::string> res = db.searchFirst(searchedString, false, false);
+
+	ASSERT_EQ(0, res.code) << "Differing cases could not be found!";
 }
