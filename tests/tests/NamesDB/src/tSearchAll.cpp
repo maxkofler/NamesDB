@@ -11,7 +11,7 @@ TEST(NamesDB, searchAll_debug){
 		NamesDB<int> db;
 		db.add("NewEntry", 0);
 
-		db.searchAll("Entry", false);
+		db.searchAll("Entry", false, true);
 
 		F_NOTHROW(funName + " - debug");
 	} catch (DebugException* e){
@@ -35,10 +35,10 @@ TEST(NamesDB, searchAll_bounds){
 	db.add("newEntry", str1);
 	db.add("newSecondEntry", str2);
 
-	auto res = db.searchAll("new", false, 0, 0);
+	auto res = db.searchAll("new", false, true, 0, 0);
 	ASSERT_EQ(1, res.size()) << "Found wrong count of entries";
 
 	db._db._threads_available = 2;
-	res = db.searchAll("new", false, 0, 0);
+	res = db.searchAll("new", false, true, 0, 0);
 	ASSERT_EQ(1, res.size()) << "Found wrong count of entries when using multithreading";
 }

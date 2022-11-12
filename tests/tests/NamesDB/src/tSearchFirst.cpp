@@ -9,7 +9,7 @@ TEST(NamesDB, searchFirst_debug){
 		DEBUG_FAIL_FUN(funName);
 
 		NamesDB<int> db;
-		db.searchFirst("noName", true);
+		db.searchFirst("noName", true, true);
 
 		F_NOTHROW(funName + " - debug");
 	} catch (DebugException* e){
@@ -32,11 +32,11 @@ TEST(NamesDB, searchFirst_find_name){
 	size_t id = db.add(name, name);
 	size_t id2 = db.add(name2, name2);
 
-	ASSERT_EQ(0, db.searchFirst(name, true).code) << "Could not find the entry";
-	ASSERT_EQ(name, *db.searchFirst(name, true).data);
+	ASSERT_EQ(0, db.searchFirst(name, true, true).code) << "Could not find the entry";
+	ASSERT_EQ(name, *db.searchFirst(name, true, true).data);
 
-	ASSERT_EQ(0, db.searchFirst(name2, true).code) << "Could not find the entry";
-	ASSERT_EQ(name2, *db.searchFirst(name2, true).data);
+	ASSERT_EQ(0, db.searchFirst(name2, true, true).code) << "Could not find the entry";
+	ASSERT_EQ(name2, *db.searchFirst(name2, true, true).data);
 }
 
 //Tests if searchFirst() finds a name that is scattered throughout a string
@@ -49,7 +49,7 @@ TEST(NamesDB, searchFirst_find_scattered_name){
 
 	size_t id = db.add(name, name);
 
-	ASSERT_NE(0, db.searchFirst("CONTENT", false).code) << "Found a scattered name, this should not be";
+	ASSERT_NE(0, db.searchFirst("CONTENT", false, true).code) << "Found a scattered name, this should not be";
 }
 
 //Tests if searchFirst() finds a similar string, what it should not do
@@ -65,14 +65,14 @@ TEST(NamesDB, searchFirst_similar){
 	size_t idT = db.add(contentTrue, contentTrue);
 
 	{	//Check if the search find the wrong entry
-		namesDB_searchRes res = db.searchFirst("Content", true);
+		namesDB_searchRes res = db.searchFirst("Content", true, true);
 
 		ASSERT_EQ(0, res.code) << "Could not find the required string";
 		EXPECT_NE(contentWrong, *res.data) << "Found the wrong item that was similar";
 	}
 
 	{	//Check if the search for "myContent" works correctly
-		namesDB_searchRes res = db.searchFirst("myContent", true);
+		namesDB_searchRes res = db.searchFirst("myContent", true, true);
 
 		ASSERT_NE(0, res.code) << "Found a match that should not be";
 	}
@@ -89,8 +89,8 @@ TEST(NamesDB, searchFirst_find_content_start){
 
 	size_t id = db.add(name, content);
 
-	ASSERT_EQ(0, db.searchFirst(content, false).code) << "Could not find the required string";
-	ASSERT_EQ(content, *db.searchFirst(content, false).data) << "Found the wrong entry";
+	ASSERT_EQ(0, db.searchFirst(content, false, true).code) << "Could not find the required string";
+	ASSERT_EQ(content, *db.searchFirst(content, false, true).data) << "Found the wrong entry";
 }
 
 TEST(NamesDB, searchFirst_find_content_middle){
@@ -103,8 +103,8 @@ TEST(NamesDB, searchFirst_find_content_middle){
 
 	size_t id = db.add(name, content);
 
-	ASSERT_EQ(0, db.searchFirst(content, false).code) << "Could not find the required string";
-	ASSERT_EQ(content, *db.searchFirst(content, false).data) << "Found the wrong entry";	//FAILS BECAUSE IMPLEMENTATION IS FLAWED!
+	ASSERT_EQ(0, db.searchFirst(content, false, true).code) << "Could not find the required string";
+	ASSERT_EQ(content, *db.searchFirst(content, false, true).data) << "Found the wrong entry";	//FAILS BECAUSE IMPLEMENTATION IS FLAWED!
 }
 
 TEST(NamesDB, searchFirst_find_content_end){
@@ -117,8 +117,8 @@ TEST(NamesDB, searchFirst_find_content_end){
 
 	size_t id = db.add(name, content);
 
-	ASSERT_EQ(0, db.searchFirst(content, false).code) << "Could not find the required string";
-	ASSERT_EQ(content, *db.searchFirst(content, false).data) << "Found the wrong entry";	//FAILS BECAUSE IMPLEMENTATION IS FLAWED!
+	ASSERT_EQ(0, db.searchFirst(content, false, true).code) << "Could not find the required string";
+	ASSERT_EQ(content, *db.searchFirst(content, false, true).data) << "Found the wrong entry";	//FAILS BECAUSE IMPLEMENTATION IS FLAWED!
 }
 
 //Tests if the argument "search_start" works
@@ -135,14 +135,14 @@ TEST(NamesDB, searchFirst_find_from_start_index){
 	db.add(searchedString, searchedString);
 
 	{
-		namesDB_searchRes res = db.searchFirst(searchedString, true);
+		namesDB_searchRes res = db.searchFirst(searchedString, true, true);
 
 		ASSERT_EQ(0, res.code) << "Database search failed";
 		ASSERT_EQ(searchedString, *res.data) << "searchFirst() could not find the first occurence";
 	}
 
 	{
-		namesDB_searchRes res = db.searchFirst(searchedString, true);
+		namesDB_searchRes res = db.searchFirst(searchedString, true, true);
 
 		ASSERT_EQ(0, res.code) << "Database search failed";
 		ASSERT_EQ(searchedString, *res.data) << "searchFirst() could not find the second occurence";

@@ -28,7 +28,7 @@ TEST(NamesDB_Stress, searchAll_loads_of_names){
 	{
 		auto indexStart = high_resolution_clock::now();
 		hlog->setLevel(Log::U);
-		std::deque<namesDB_searchRes<std::string>> res = db.searchAll(finalName, false);
+		std::deque<namesDB_searchRes<std::string>> res = db.searchAll(finalName, false, true);
 		hlog->setLevel(oldLevel);
 		auto indexStop = high_resolution_clock::now();
 		auto indexDuration = duration_cast<milliseconds>(indexStop - indexStart);
@@ -41,7 +41,7 @@ TEST(NamesDB_Stress, searchAll_loads_of_names){
 		db._db._threads_available = 1;
 		auto indexStart = high_resolution_clock::now();
 		hlog->setLevel(Log::U);
-		std::deque<namesDB_searchRes<std::string>> res = db.searchAll(finalName, false);
+		std::deque<namesDB_searchRes<std::string>> res = db.searchAll(finalName, false, true);
 		hlog->setLevel(oldLevel);
 		auto indexStop = high_resolution_clock::now();
 		auto indexDuration = duration_cast<milliseconds>(indexStop - indexStart);

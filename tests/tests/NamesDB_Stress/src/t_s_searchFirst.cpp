@@ -15,7 +15,7 @@ TEST(NamesDB_Stress, searchFirst_loads_of_names){
 
 	db.add(finalName, finalName);
 
-	namesDB_searchRes res = db.searchFirst(finalName, false);
+	namesDB_searchRes res = db.searchFirst(finalName, false, true);
 
 	ASSERT_EQ(0, res.code) << "Could not find the required string";
 	EXPECT_EQ(finalName, *res.data) << "Found the wrong entry";

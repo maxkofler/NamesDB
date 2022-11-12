@@ -41,7 +41,7 @@ TEST(NamesDB, import_export){
 	ASSERT_EQ(string2, *newDB.getEntry(1)) << "Import and export did not work (Changed values)";
 	ASSERT_EQ(string3, *newDB.getEntry(2)) << "Import and export did not work (Changed values)";
 
-	ASSERT_EQ(string1, *newDB.searchFirst(string1, true).data) << "Import and export did not work (Changed values in search)";
-	ASSERT_EQ(string2, *newDB.searchFirst(string2, true).data) << "Import and export did not work (Changed values in search)";
-	ASSERT_EQ(string3, *newDB.searchFirst(string3, true).data) << "Import and export did not work (Changed values in search)";
+	ASSERT_EQ(string1, *newDB.searchFirst(string1, true, true).data) << "Import and export did not work (Changed values in search)";
+	ASSERT_EQ(string2, *newDB.searchFirst(string2, true, true).data) << "Import and export did not work (Changed values in search)";
+	ASSERT_EQ(string3, *newDB.searchFirst(string3, true, true).data) << "Import and export did not work (Changed values in search)";
 }
