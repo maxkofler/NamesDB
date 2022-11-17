@@ -12,36 +12,50 @@ bool NamesDBT::importDB(std::istream& instream){
 
 	clean();
 
-	instream.read((char*)&_bytesUsed, sizeof(size_t));
-	LOGMEM("[NamesDB][importDB] Importing " + std::to_string(_bytesUsed) + " bytes to \"" + _title + "\"...");
+	{	//Read the amount of bytes needed
+		instream.read((char*)&_bytesUsed, sizeof(size_t));
+		LOGMEM("[NamesDB][importDB] Importing " + std::to_string(_bytesUsed) + " bytes to \"" + _title + "\"...");
 
-	if (!instream){
-		LOGE(	"[NamesDB][importDB] Failed to import stream contents to \"" + 
-				_title + "\": EOF in length header, read bytes: " + std::to_string(instream.gcount()));
-		clean();
-		return false;
+		if (!instream){
+			LOGE(	"[NamesDB][importDB] Failed to import stream contents to \"" + 
+					_title + "\": EOF in length header, read bytes: " + std::to_string(instream.gcount()));
+			clean();
+			return false;
+		}
 	}
 
-	instream.read((char*)&_count_entries, sizeof(size_t));
-	LOGMEM("[NamesDB][importDB] Importing " + std::to_string(_count_entries) + " entries to \"" + _title + "\"...");
+	{	//Read the amount of entries supplied
+		instream.read((char*)&_count_entries, sizeof(size_t));
+		LOGMEM("[NamesDB][importDB] Importing " + std::to_string(_count_entries) + " entries to \"" + _title + "\"...");
 
-	if (!instream){
-		LOGE(	"[NamesDB][importDB] Failed to import stream contents to \"" + 
-				_title + "\": EOF in count header, read bytes: " + std::to_string(instream.gcount()));
-		clean();
-		return false;
+		if (!instream){
+			LOGE(	"[NamesDB][importDB] Failed to import stream contents to \"" + 
+					_title + "\": EOF in count header, read bytes: " + std::to_string(instream.gcount()));
+			clean();
+			return false;
+		}
 	}
 
-	_bytesAllocated = _bytesUsed;
+	//Calculate needed blocks
+	_blockCount = (_bytesUsed / _blockSize) + 1;
+
+	//Allocate enough blocks
+	LOGMEM("[NamesDB][importDB] Allocating " + std::to_string(_blockCount) + " blocks for imported DB");
+	_bytesAllocated = _blockCount * _blockSize;
 	_entries = new uint8_t[_bytesAllocated];
 
-	instream.read((char*)_entries, _bytesUsed);
-	if (!instream){
-		LOGE(	"[NamesDB][importDB] Failed to import stream contents to \"" + 
-				_title + "\": EOF in data segment, read bytes: " + std::to_string(instream.gcount()));
-		clean();
-		return false;
+	{	//Import the data
+		instream.read((char*)_entries, _bytesUsed);
+		if (!instream){
+			LOGE(	"[NamesDB][importDB] Failed to import stream contents to \"" + 
+					_title + "\": EOF in data segment, read bytes: " + std::to_string(instream.gcount()));
+			clean();
+			return false;
+		}
 	}
+
+	//Set the last entry
+	_last_entry = getDBEntry(_count_entries-1);
 
 	return true;
 }
